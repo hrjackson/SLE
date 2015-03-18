@@ -47,12 +47,12 @@
 		BA99949B1AB9B42B00B06152 /* cairo-xlib-xrender.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "cairo-xlib-xrender.h"; sourceTree = "<group>"; };
 		BA99949C1AB9B42B00B06152 /* cairo-xlib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "cairo-xlib.h"; sourceTree = "<group>"; };
 		BA99949D1AB9B42B00B06152 /* cairo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cairo.h; sourceTree = "<group>"; };
-		BA99949E1AB9B48100B06152 /* libcairo-gobject.2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libcairo-gobject.2.dylib"; path = "../../../../../../usr/local/Cellar/cairo/1.14.0/lib/libcairo-gobject.2.dylib"; sourceTree = "<group>"; };
-		BA99949F1AB9B48100B06152 /* libcairo-gobject.2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libcairo-gobject.2.dylib"; path = "../../../../../../usr/local/Cellar/cairo/1.14.0/lib/libcairo-gobject.2.dylib"; sourceTree = "<group>"; };
-		BA9994A01AB9B48100B06152 /* libcairo-script-interpreter.2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libcairo-script-interpreter.2.dylib"; path = "../../../../../../usr/local/Cellar/cairo/1.14.0/lib/libcairo-script-interpreter.2.dylib"; sourceTree = "<group>"; };
-		BA9994A11AB9B48100B06152 /* libcairo-script-interpreter.2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libcairo-script-interpreter.2.dylib"; path = "../../../../../../usr/local/Cellar/cairo/1.14.0/lib/libcairo-script-interpreter.2.dylib"; sourceTree = "<group>"; };
-		BA9994A21AB9B48100B06152 /* libcairo.2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libcairo.2.dylib; path = ../../../../../../usr/local/Cellar/cairo/1.14.0/lib/libcairo.2.dylib; sourceTree = "<group>"; };
-		BA9994A31AB9B48100B06152 /* libcairo.2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libcairo.2.dylib; path = ../../../../../../usr/local/Cellar/cairo/1.14.0/lib/libcairo.2.dylib; sourceTree = "<group>"; };
+		BA99949E1AB9B48100B06152 /* libcairo-gobject.2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libcairo-gobject.2.dylib"; path = "/usr/local/Cellar/cairo/1.14.0/lib/libcairo-gobject.2.dylib"; sourceTree = "<absolute>"; };
+		BA99949F1AB9B48100B06152 /* libcairo-gobject.2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libcairo-gobject.2.dylib"; path = "/usr/local/Cellar/cairo/1.14.0/lib/libcairo-gobject.2.dylib"; sourceTree = "<absolute>"; };
+		BA9994A01AB9B48100B06152 /* libcairo-script-interpreter.2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libcairo-script-interpreter.2.dylib"; path = "/usr/local/Cellar/cairo/1.14.0/lib/libcairo-script-interpreter.2.dylib"; sourceTree = "<absolute>"; };
+		BA9994A11AB9B48100B06152 /* libcairo-script-interpreter.2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libcairo-script-interpreter.2.dylib"; path = "/usr/local/Cellar/cairo/1.14.0/lib/libcairo-script-interpreter.2.dylib"; sourceTree = "<absolute>"; };
+		BA9994A21AB9B48100B06152 /* libcairo.2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libcairo.2.dylib; path = /usr/local/Cellar/cairo/1.14.0/lib/libcairo.2.dylib; sourceTree = "<absolute>"; };
+		BA9994A31AB9B48100B06152 /* libcairo.2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libcairo.2.dylib; path = /usr/local/Cellar/cairo/1.14.0/lib/libcairo.2.dylib; sourceTree = "<absolute>"; };
 		BA9994AA1AB9B52700B06152 /* stochastic_processes.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = stochastic_processes.cpp; sourceTree = "<group>"; };
 		BA9994AB1AB9B52700B06152 /* stochastic_processes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stochastic_processes.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -77,12 +77,7 @@
 		BA89C1911A8A579100465451 = {
 			isa = PBXGroup;
 			children = (
-				BA99949E1AB9B48100B06152 /* libcairo-gobject.2.dylib */,
-				BA99949F1AB9B48100B06152 /* libcairo-gobject.2.dylib */,
-				BA9994A01AB9B48100B06152 /* libcairo-script-interpreter.2.dylib */,
-				BA9994A11AB9B48100B06152 /* libcairo-script-interpreter.2.dylib */,
-				BA9994A21AB9B48100B06152 /* libcairo.2.dylib */,
-				BA9994A31AB9B48100B06152 /* libcairo.2.dylib */,
+				BACA136F1AB9C00600598B0F /* libraries */,
 				BA89C19C1A8A579100465451 /* SLE */,
 				BA89C19B1A8A579100465451 /* Products */,
 			);
@@ -128,6 +123,19 @@
 			);
 			name = cairo;
 			path = ../../../../../../../usr/local/Cellar/cairo/1.14.0/include/cairo;
+			sourceTree = "<group>";
+		};
+		BACA136F1AB9C00600598B0F /* libraries */ = {
+			isa = PBXGroup;
+			children = (
+				BA99949E1AB9B48100B06152 /* libcairo-gobject.2.dylib */,
+				BA99949F1AB9B48100B06152 /* libcairo-gobject.2.dylib */,
+				BA9994A01AB9B48100B06152 /* libcairo-script-interpreter.2.dylib */,
+				BA9994A11AB9B48100B06152 /* libcairo-script-interpreter.2.dylib */,
+				BA9994A21AB9B48100B06152 /* libcairo.2.dylib */,
+				BA9994A31AB9B48100B06152 /* libcairo.2.dylib */,
+			);
+			name = libraries;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
