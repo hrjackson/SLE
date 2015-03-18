@@ -22,7 +22,7 @@ int main(int argc, const char * argv[]) {
     cairo_set_font_size(cr, 40.0);
     
     cairo_move_to(cr, 10.0, 50.0);
-    cairo_show_text(cr, "Hello world!");
+    cairo_show_text(cr, "Hello GitHub!");
     
     cairo_surface_write_to_png(surface, "image.png");
     
