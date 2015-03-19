@@ -20,6 +20,8 @@ protected:
 public:
     Process(std::vector<double>);
     void setValue(double time, std::vector<double> position);
+    std::vector<std::vector<double> > getValues();
+    std::vector<double> getTimes();
 };
 
 class StochasticProcess : public Process {

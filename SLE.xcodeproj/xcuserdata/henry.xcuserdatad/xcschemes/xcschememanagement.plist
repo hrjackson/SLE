@@ -9,9 +9,19 @@
 			<key>orderHint</key>
 			<integer>0</integer>
 		</dict>
+		<key>SLETest.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>1</integer>
+		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
+		<key>BA328A0F1ABAF67500BD56DA</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
 		<key>BA89C1991A8A579100465451</key>
 		<dict>
 			<key>primary</key>

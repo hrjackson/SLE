@@ -21,8 +21,9 @@ std::vector<std::vector<double> > insert(std::vector<std::vector<double> > vec,
 //// Process member function definitions ///////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 Process::Process(std::vector<double> initial_pos){
-    std::vector<double> times(1, 0.0);
-    std::vector<std::vector<double> > values;
+    //std::vector<double> times(1, 0.0);
+    times.push_back(0.0);
+    //std::vector<std::vector<double> > values;
     values.push_back(initial_pos);
     dimension = initial_pos.size();
 };
@@ -38,6 +39,14 @@ void Process::setValue(double time, std::vector<double> position){
         times.insert(times.begin()+index, time);
         values.insert(values.begin()+index, position);
     }
+};
+
+std::vector<std::vector<double> > Process::getValues(){
+    return values;
+};
+
+std::vector<double> Process::getTimes(){
+    return times;
 };
 
 

@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		BA328A131ABAF67500BD56DA /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BA328A121ABAF67500BD56DA /* main.cpp */; };
+		BA328A1A1ABAF94800BD56DA /* ProcessTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BA328A181ABAF94800BD56DA /* ProcessTest.cpp */; };
+		BA328A1B1ABAFF7800BD56DA /* stochastic_processes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BA9994AA1AB9B52700B06152 /* stochastic_processes.cpp */; };
 		BA89C19E1A8A579100465451 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BA89C19D1A8A579100465451 /* main.cpp */; };
 		BA9994A41AB9B48100B06152 /* libcairo-gobject.2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = BA99949E1AB9B48100B06152 /* libcairo-gobject.2.dylib */; };
 		BA9994A51AB9B48100B06152 /* libcairo-gobject.2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = BA99949F1AB9B48100B06152 /* libcairo-gobject.2.dylib */; };
@@ -18,6 +21,15 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		BA328A0E1ABAF67500BD56DA /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
 		BA89C1981A8A579100465451 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -30,6 +42,10 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		BA328A101ABAF67500BD56DA /* SLETest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = SLETest; sourceTree = BUILT_PRODUCTS_DIR; };
+		BA328A121ABAF67500BD56DA /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		BA328A171ABAF6B500BD56DA /* catch.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = catch.hpp; sourceTree = "<group>"; };
+		BA328A181ABAF94800BD56DA /* ProcessTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ProcessTest.cpp; sourceTree = "<group>"; };
 		BA89C19A1A8A579100465451 /* SLE */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = SLE; sourceTree = BUILT_PRODUCTS_DIR; };
 		BA89C19D1A8A579100465451 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		BA99948F1AB9B42B00B06152 /* cairo-deprecated.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "cairo-deprecated.h"; sourceTree = "<group>"; };
@@ -58,6 +74,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		BA328A0D1ABAF67500BD56DA /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		BA89C1971A8A579100465451 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -74,11 +97,22 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		BA328A111ABAF67500BD56DA /* SLETest */ = {
+			isa = PBXGroup;
+			children = (
+				BA328A171ABAF6B500BD56DA /* catch.hpp */,
+				BA328A121ABAF67500BD56DA /* main.cpp */,
+				BA328A181ABAF94800BD56DA /* ProcessTest.cpp */,
+			);
+			path = SLETest;
+			sourceTree = "<group>";
+		};
 		BA89C1911A8A579100465451 = {
 			isa = PBXGroup;
 			children = (
 				BACA136F1AB9C00600598B0F /* libraries */,
 				BA89C19C1A8A579100465451 /* SLE */,
+				BA328A111ABAF67500BD56DA /* SLETest */,
 				BA89C19B1A8A579100465451 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -87,6 +121,7 @@
 			isa = PBXGroup;
 			children = (
 				BA89C19A1A8A579100465451 /* SLE */,
+				BA328A101ABAF67500BD56DA /* SLETest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -141,6 +176,23 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		BA328A0F1ABAF67500BD56DA /* SLETest */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = BA328A141ABAF67500BD56DA /* Build configuration list for PBXNativeTarget "SLETest" */;
+			buildPhases = (
+				BA328A0C1ABAF67500BD56DA /* Sources */,
+				BA328A0D1ABAF67500BD56DA /* Frameworks */,
+				BA328A0E1ABAF67500BD56DA /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = SLETest;
+			productName = SLETest;
+			productReference = BA328A101ABAF67500BD56DA /* SLETest */;
+			productType = "com.apple.product-type.tool";
+		};
 		BA89C1991A8A579100465451 /* SLE */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = BA89C1A11A8A579100465451 /* Build configuration list for PBXNativeTarget "SLE" */;
@@ -167,6 +219,9 @@
 				LastUpgradeCheck = 0610;
 				ORGANIZATIONNAME = n/a;
 				TargetAttributes = {
+					BA328A0F1ABAF67500BD56DA = {
+						CreatedOnToolsVersion = 6.1.1;
+					};
 					BA89C1991A8A579100465451 = {
 						CreatedOnToolsVersion = 6.1.1;
 					};
@@ -185,11 +240,22 @@
 			projectRoot = "";
 			targets = (
 				BA89C1991A8A579100465451 /* SLE */,
+				BA328A0F1ABAF67500BD56DA /* SLETest */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXSourcesBuildPhase section */
+		BA328A0C1ABAF67500BD56DA /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BA328A131ABAF67500BD56DA /* main.cpp in Sources */,
+				BA328A1B1ABAFF7800BD56DA /* stochastic_processes.cpp in Sources */,
+				BA328A1A1ABAF94800BD56DA /* ProcessTest.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		BA89C1961A8A579100465451 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -202,6 +268,24 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
+		BA328A151ABAF67500BD56DA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		BA328A161ABAF67500BD56DA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 		BA89C19F1A8A579100465451 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -301,6 +385,14 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		BA328A141ABAF67500BD56DA /* Build configuration list for PBXNativeTarget "SLETest" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				BA328A151ABAF67500BD56DA /* Debug */,
+				BA328A161ABAF67500BD56DA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
 		BA89C1951A8A579100465451 /* Build configuration list for PBXProject "SLE" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
