@@ -84,7 +84,36 @@ TEST_CASE( "StochasticProcess class tested", "[StochasticProcess]"){
     }
 }
 
-
+TEST_CASE( "BrownianMotion class tested", "[BrownianMotion]"){
+    std::vector<double> init(2, 0.0);
+    BrownianMotion B(init);
+    
+    SECTION( "Testing initialisation" ) {
+        REQUIRE( B.getTimes().size() == 1 );
+        REQUIRE( B.getTimes()[0] == 0.0);
+        REQUIRE( B.getValues().size() == 1);
+        REQUIRE( B.getValues()[0] == init);
+    }
+    
+    SECTION( "Testing value generation") {
+        double t = 1.0;
+        std::vector<double> val = B(t);
+        REQUIRE( B.getValues().back() == val);
+        
+        t = 0.4;
+        std::vector<double> mid_val = B(t);
+        std::vector<double> times(1, 0.0);
+        times.push_back(0.4);
+        times.push_back(1.0);
+        std::vector<std::vector<double> > values;
+        values.push_back(init);
+        values.push_back(mid_val);
+        values.push_back(val);
+        
+        REQUIRE( B.getTimes() == times);
+        REQUIRE( B.getValues() == values);
+    }
+}
 
 
 
