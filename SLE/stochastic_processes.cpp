@@ -7,6 +7,7 @@
 //
 
 #include "stochastic_processes.h"
+#include <cmath>
 
 ////////////////////////////////////////////////////////////////////////////////
 //// Helper function definitions ///////////////////////////////////////////////
@@ -66,7 +67,26 @@ std::vector<double> StochasticProcess::getValue(double time){
 ////////////////////////////////////////////////////////////////////////////////
 std::vector<double> BrownianMotion::getValue(double time){
     std::vector<double> val;
-    
+    double change = 0;
+    if (time > times.back()) {
+        double dt = time - times.back();
+        for (int i = 0; i < dimension; i++) {
+            change = rnorm(generator)*sqrt(dt);
+            val.push_back(values.back()[i] + change);
+        }
+    }
+    else {
+        int ind = indexAbove(times, time);
+        std::vector<double> interp = interpolate(times, values, time);
+        double dt = times[ind] - times[ind-1];
+        double conditionalVariance =
+            (time - times[ind-1])*(times[ind] - time)/dt;
+        for (int i = 0; i < dimension; i++) {
+            change = rnorm(generator)*sqrt(conditionalVariance);
+            val.push_back(interp[i] + change);
+        }
+    }
+    setValue(time, val);
     return val;
 };
 
