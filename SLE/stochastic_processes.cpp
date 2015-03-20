@@ -65,7 +65,7 @@ std::vector<double> StochasticProcess::operator()(double time){
 ////////////////////////////////////////////////////////////////////////////////
 //// Brownian motion member function definitions ///////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
-std::vector<double> BrownianMotion::getValue(double time){
+std::vector<double> BrownianMotion::operator()(double time){
     std::vector<double> val;
     double change = 0;
     if (time > times.back()) {

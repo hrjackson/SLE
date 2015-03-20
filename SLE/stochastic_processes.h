@@ -39,7 +39,7 @@ private:
     std::mt19937_64 generator;
     std::normal_distribution<double> rnorm;
 public:
-    std::vector<double> getValue(double time);
+    std::vector<double> operator()(double time);
     BrownianMotion(std::vector<double> initial_pos)
     :Process(initial_pos) {
         long long seed = std::chrono::system_clock::now().time_since_epoch().count();
