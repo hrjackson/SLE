@@ -67,8 +67,8 @@ TEST_CASE( "StochasticProcess class tested", "[StochasticProcess]"){
     SECTION( "Testing initialisation" ) {
         REQUIRE( proc.getTimes().size() == 1 );
         REQUIRE( proc.getTimes()[0] == 0.0);
-        REQUIRE( proc.getValues().size() == 1);
-        REQUIRE( proc.getValues()[0] == init);
+        REQUIRE( proc.getValues().size() == 1 );
+        REQUIRE( proc.getValues()[0] == init );
     }
     
     SECTION( "Testing interpolation") {
@@ -90,9 +90,9 @@ TEST_CASE( "BrownianMotion class tested", "[BrownianMotion]"){
     
     SECTION( "Testing initialisation" ) {
         REQUIRE( B.getTimes().size() == 1 );
-        REQUIRE( B.getTimes()[0] == 0.0);
-        REQUIRE( B.getValues().size() == 1);
-        REQUIRE( B.getValues()[0] == init);
+        REQUIRE( B.getTimes()[0] == 0.0 );
+        REQUIRE( B.getValues().size() == 1 );
+        REQUIRE( B.getValues()[0] == init );
     }
     
     SECTION( "Testing value generation") {
@@ -100,6 +100,9 @@ TEST_CASE( "BrownianMotion class tested", "[BrownianMotion]"){
         std::vector<double> val = B(t);
         REQUIRE( B.getValues().back() == val);
         
+        // Check to see if viewing the BM is modifying it in the correct way.
+        // When we look at a new time, that time and corresponding value should
+        // be recorded in the correct places in times and values.
         t = 0.4;
         std::vector<double> mid_val = B(t);
         std::vector<double> times(1, 0.0);
@@ -110,8 +113,8 @@ TEST_CASE( "BrownianMotion class tested", "[BrownianMotion]"){
         values.push_back(mid_val);
         values.push_back(val);
         
-        REQUIRE( B.getTimes() == times);
-        REQUIRE( B.getValues() == values);
+        REQUIRE( B.getTimes() == times );
+        REQUIRE( B.getValues() == values );
     }
 }
 

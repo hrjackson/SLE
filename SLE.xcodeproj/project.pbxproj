@@ -10,6 +10,8 @@
 		BA328A131ABAF67500BD56DA /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BA328A121ABAF67500BD56DA /* main.cpp */; };
 		BA328A1A1ABAF94800BD56DA /* ProcessTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BA328A181ABAF94800BD56DA /* ProcessTest.cpp */; };
 		BA328A1B1ABAFF7800BD56DA /* stochastic_processes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BA9994AA1AB9B52700B06152 /* stochastic_processes.cpp */; };
+		BA87FDD81ABC5903008DFF30 /* sle_process.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BA87FDD61ABC5903008DFF30 /* sle_process.cpp */; };
+		BA87FDD91ABC5903008DFF30 /* sle_process.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BA87FDD61ABC5903008DFF30 /* sle_process.cpp */; };
 		BA89C19E1A8A579100465451 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BA89C19D1A8A579100465451 /* main.cpp */; };
 		BA9994A41AB9B48100B06152 /* libcairo-gobject.2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = BA99949E1AB9B48100B06152 /* libcairo-gobject.2.dylib */; };
 		BA9994A51AB9B48100B06152 /* libcairo-gobject.2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = BA99949F1AB9B48100B06152 /* libcairo-gobject.2.dylib */; };
@@ -46,6 +48,8 @@
 		BA328A121ABAF67500BD56DA /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		BA328A171ABAF6B500BD56DA /* catch.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = catch.hpp; sourceTree = "<group>"; };
 		BA328A181ABAF94800BD56DA /* ProcessTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ProcessTest.cpp; sourceTree = "<group>"; };
+		BA87FDD61ABC5903008DFF30 /* sle_process.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sle_process.cpp; sourceTree = "<group>"; };
+		BA87FDD71ABC5903008DFF30 /* sle_process.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sle_process.h; sourceTree = "<group>"; };
 		BA89C19A1A8A579100465451 /* SLE */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = SLE; sourceTree = BUILT_PRODUCTS_DIR; };
 		BA89C19D1A8A579100465451 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		BA99948F1AB9B42B00B06152 /* cairo-deprecated.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "cairo-deprecated.h"; sourceTree = "<group>"; };
@@ -133,6 +137,8 @@
 				BA89C19D1A8A579100465451 /* main.cpp */,
 				BA9994AA1AB9B52700B06152 /* stochastic_processes.cpp */,
 				BA9994AB1AB9B52700B06152 /* stochastic_processes.h */,
+				BA87FDD61ABC5903008DFF30 /* sle_process.cpp */,
+				BA87FDD71ABC5903008DFF30 /* sle_process.h */,
 			);
 			path = SLE;
 			sourceTree = "<group>";
@@ -252,6 +258,7 @@
 			files = (
 				BA328A131ABAF67500BD56DA /* main.cpp in Sources */,
 				BA328A1B1ABAFF7800BD56DA /* stochastic_processes.cpp in Sources */,
+				BA87FDD91ABC5903008DFF30 /* sle_process.cpp in Sources */,
 				BA328A1A1ABAF94800BD56DA /* ProcessTest.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -260,6 +267,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BA87FDD81ABC5903008DFF30 /* sle_process.cpp in Sources */,
 				BA9994AC1AB9B52700B06152 /* stochastic_processes.cpp in Sources */,
 				BA89C19E1A8A579100465451 /* main.cpp in Sources */,
 			);
@@ -392,6 +400,7 @@
 				BA328A161ABAF67500BD56DA /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		BA89C1951A8A579100465451 /* Build configuration list for PBXProject "SLE" */ = {
 			isa = XCConfigurationList;
