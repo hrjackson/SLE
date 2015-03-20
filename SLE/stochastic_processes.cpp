@@ -15,15 +15,16 @@ int indexAbove(std::vector<double>, double time);
 std::vector<std::vector<double> > insert(std::vector<std::vector<double> > vec,
                                          int index,
                                          std::vector<double>);
+std::vector<double> interpolate(std::vector<double> times,
+                                std::vector<std::vector<double> > values,
+                                double time);
 
 
 ////////////////////////////////////////////////////////////////////////////////
 //// Process member function definitions ///////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 Process::Process(std::vector<double> initial_pos){
-    //std::vector<double> times(1, 0.0);
     times.push_back(0.0);
-    //std::vector<std::vector<double> > values;
     values.push_back(initial_pos);
     dimension = initial_pos.size();
 };
@@ -51,6 +52,25 @@ std::vector<double> Process::getTimes(){
 
 
 ////////////////////////////////////////////////////////////////////////////////
+//// Stochastic Process member function definitions ////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+std::vector<double> StochasticProcess::getValue(double time){
+    std::vector<double> val;
+    val = interpolate(times, values, time);
+    return val;
+};
+
+
+////////////////////////////////////////////////////////////////////////////////
+//// Brownian motion member function definitions ///////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+std::vector<double> BrownianMotion::getValue(double time){
+    std::vector<double> val;
+    
+    return val;
+};
+
+////////////////////////////////////////////////////////////////////////////////
 //// Helper function implementations ///////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -62,3 +82,30 @@ int indexAbove(std::vector<double> sortedVec, double time){
     }
     return index;
 };
+
+// Linearly interpolates between values to give approximate value at time
+std::vector<double> interpolate(std::vector<double> times,
+                                std::vector<std::vector<double> > values,
+                                double time){
+    std::vector<double> val(values[0].size());
+    int ind;
+    ind = indexAbove(times, time);
+    std::vector<double> lval = values[ind-1];
+    std::vector<double> rval = values[ind];
+    double ltime = times[ind-1];
+    double rtime = times[ind];
+    double difference = rtime - ltime;
+    for (int i = 0; i < lval.size(); i++) {
+        val[i] = ( lval[i]*(rtime - time) + rval[i]*(time - ltime) )/difference;
+    }
+    return val;
+};
+
+
+
+
+
+
+
+
+
