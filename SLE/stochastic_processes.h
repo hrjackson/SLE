@@ -27,7 +27,7 @@ public:
 
 class StochasticProcess : public Process {
 public:
-    std::vector<double> getValue(double time);
+    std::vector<double> operator()(double time);
     StochasticProcess(std::vector<double> initial_pos)
     :Process(initial_pos){
         // Write something...
@@ -41,7 +41,7 @@ private:
 public:
     std::vector<double> getValue(double time);
     BrownianMotion(std::vector<double> initial_pos)
-    :Process(initial_pos){
+    :Process(initial_pos) {
         long long seed = std::chrono::system_clock::now().time_since_epoch().count();
         generator.seed(seed);
     };

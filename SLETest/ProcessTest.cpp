@@ -80,7 +80,7 @@ TEST_CASE( "StochasticProcess class tested", "[StochasticProcess]"){
         std::vector<double> pos_mid(1, 0.6);
         pos_mid.push_back(1.2);
         
-        REQUIRE (proc.getValue(0.6) == pos_mid);
+        REQUIRE (proc(0.6) == pos_mid);
     }
 }
 

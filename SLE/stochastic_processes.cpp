@@ -55,7 +55,7 @@ std::vector<double> Process::getTimes(){
 ////////////////////////////////////////////////////////////////////////////////
 //// Stochastic Process member function definitions ////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
-std::vector<double> StochasticProcess::getValue(double time){
+std::vector<double> StochasticProcess::operator()(double time){
     std::vector<double> val;
     val = interpolate(times, values, time);
     return val;
