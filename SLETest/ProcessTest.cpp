@@ -59,3 +59,53 @@ TEST_CASE( "Process class tested", "[Process]"){
         REQUIRE( proc.getValues() == v_three);
     }
 }
+
+TEST_CASE( "StochasticProcess class tested", "[StochasticProcess]"){
+    std::vector<double> init(2, 0.0);
+    StochasticProcess proc(init);
+    
+    SECTION( "Testing initialisation" ) {
+        REQUIRE( proc.getTimes().size() == 1 );
+        REQUIRE( proc.getTimes()[0] == 0.0);
+        REQUIRE( proc.getValues().size() == 1);
+        REQUIRE( proc.getValues()[0] == init);
+    }
+    
+    SECTION( "Testing interpolation") {
+        std::vector<double> pos_end(1, 1.0);
+        pos_end.push_back(2.0);
+        proc.setValue(1.0, pos_end);
+        
+        // Should take value at time 0.6
+        std::vector<double> pos_mid(1, 0.6);
+        pos_mid.push_back(1.2);
+        
+        REQUIRE (proc.getValue(0.6) == pos_mid);
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
