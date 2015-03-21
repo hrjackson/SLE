@@ -9,27 +9,19 @@
 #include "stochastic_processes.h"
 #include <cmath>
 
-////////////////////////////////////////////////////////////////////////////////
-//// Helper function definitions ///////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////
-int indexAbove(std::vector<double>, double time);
-std::vector<std::vector<double> > insert(std::vector<std::vector<double> > vec,
-                                         int index,
-                                         std::vector<double>);
-std::vector<double> interpolate(std::vector<double> times,
-                                std::vector<std::vector<double> > values,
-                                double time);
-
 
 ////////////////////////////////////////////////////////////////////////////////
 //// Process member function definitions ///////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
+
+// Initialise the process with its starting point
 Process::Process(std::vector<double> initial_pos){
     times.push_back(0.0);
     values.push_back(initial_pos);
     dimension = initial_pos.size();
 };
 
+// Set the value of the process to "position" at time "time"
 void Process::setValue(double time, std::vector<double> position){
     auto elem = std::max_element(times.begin(), times.end());
     if (time > *elem) {
@@ -43,10 +35,12 @@ void Process::setValue(double time, std::vector<double> position){
     }
 };
 
+// Return all of the values in the process
 std::vector<std::vector<double> > Process::getValues(){
     return values;
 };
 
+// Return all of the times in the process
 std::vector<double> Process::getTimes(){
     return times;
 };
@@ -55,6 +49,9 @@ std::vector<double> Process::getTimes(){
 ////////////////////////////////////////////////////////////////////////////////
 //// Stochastic Process member function definitions ////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
+
+// Returns the value of the stochastic process at time "time"
+// Linear interpolation between defined times
 std::vector<double> StochasticProcess::operator()(double time){
     std::vector<double> val;
     val = interpolate(times, values, time);
@@ -65,6 +62,9 @@ std::vector<double> StochasticProcess::operator()(double time){
 ////////////////////////////////////////////////////////////////////////////////
 //// Brownian motion member function definitions ///////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
+
+// Simulates the value of the Brownian motion at time "time"
+// Brownian bridge if "time" is in the middle of previously observed times
 std::vector<double> BrownianMotion::operator()(double time){
     std::vector<double> val;
     double change = 0;
@@ -91,11 +91,11 @@ std::vector<double> BrownianMotion::operator()(double time){
 };
 
 ////////////////////////////////////////////////////////////////////////////////
-//// Helper function implementations ///////////////////////////////////////////
+//// Private function implementations //////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 
 // Finds the index a time should be inserted into a sorted vector of times
-int indexAbove(std::vector<double> sortedVec, double time){
+int Process::indexAbove(std::vector<double> sortedVec, double time){
     int index = 0;
     while (sortedVec.at(index) < time) {
         index++;
@@ -104,7 +104,7 @@ int indexAbove(std::vector<double> sortedVec, double time){
 };
 
 // Linearly interpolates between values to give approximate value at time
-std::vector<double> interpolate(std::vector<double> times,
+std::vector<double> Process::interpolate(std::vector<double> times,
                                 std::vector<std::vector<double> > values,
                                 double time){
     std::vector<double> val(values[0].size());

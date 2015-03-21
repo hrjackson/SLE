@@ -18,6 +18,13 @@ protected:
     std::vector<double> times;
     std::vector<std::vector<double> > values;
     unsigned long dimension;
+    int indexAbove(std::vector<double>, double time);
+    std::vector<std::vector<double> > insert(std::vector<std::vector<double> > vec,
+                                             int index,
+                                             std::vector<double>);
+    std::vector<double> interpolate(std::vector<double> times,
+                                    std::vector<std::vector<double> > values,
+                                    double time);
 public:
     Process(std::vector<double> initial_pos);
     void setValue(double time, std::vector<double> position);
