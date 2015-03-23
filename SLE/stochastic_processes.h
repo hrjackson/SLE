@@ -15,9 +15,12 @@
 
 class Process {
 protected:
+    // Data
     std::vector<double> times;
     std::vector<std::vector<double> > values;
     unsigned long dimension;
+    
+    // Functions
     int indexAbove(std::vector<double>, double time);
     std::vector<std::vector<double> > insert(std::vector<std::vector<double> > vec,
                                              int index,

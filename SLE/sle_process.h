@@ -10,9 +10,28 @@
 #define __SLE__sle_process__
 
 #include <stdio.h>
+#include <vector>
+#include <complex>
+#include <map>
 #include "stochastic_processes.h"
 
-StochasticProcess SLE(double kappa, double t_end, double dt);
+class SLE : public Process {
+private:
+    BrownianMotion B;
+    double kappa;
+public:
+    double operator()(double time, std::vector<double> point);
+    std::vector<double> curve(double time);
+};
+
+class SlitMap {
+private:
+    double alpha;
+    double dt;
+public:
+    std::complex<double> operator()(std::complex<double> z);
+};
+
 
 
 #endif /* defined(__SLE__sle_process__) */
