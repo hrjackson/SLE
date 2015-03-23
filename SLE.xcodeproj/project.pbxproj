@@ -20,6 +20,7 @@
 		BA9994A81AB9B48100B06152 /* libcairo.2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = BA9994A21AB9B48100B06152 /* libcairo.2.dylib */; };
 		BA9994A91AB9B48100B06152 /* libcairo.2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = BA9994A31AB9B48100B06152 /* libcairo.2.dylib */; };
 		BA9994AC1AB9B52700B06152 /* stochastic_processes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BA9994AA1AB9B52700B06152 /* stochastic_processes.cpp */; };
+		BAA910CC1AC07934000B8DFE /* SLETest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BAA910CB1AC07934000B8DFE /* SLETest.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -75,6 +76,7 @@
 		BA9994A31AB9B48100B06152 /* libcairo.2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libcairo.2.dylib; path = /usr/local/Cellar/cairo/1.14.0/lib/libcairo.2.dylib; sourceTree = "<absolute>"; };
 		BA9994AA1AB9B52700B06152 /* stochastic_processes.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = stochastic_processes.cpp; sourceTree = "<group>"; };
 		BA9994AB1AB9B52700B06152 /* stochastic_processes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stochastic_processes.h; sourceTree = "<group>"; };
+		BAA910CB1AC07934000B8DFE /* SLETest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SLETest.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -107,6 +109,7 @@
 				BA328A171ABAF6B500BD56DA /* catch.hpp */,
 				BA328A121ABAF67500BD56DA /* main.cpp */,
 				BA328A181ABAF94800BD56DA /* ProcessTest.cpp */,
+				BAA910CB1AC07934000B8DFE /* SLETest.cpp */,
 			);
 			path = SLETest;
 			sourceTree = "<group>";
@@ -259,6 +262,7 @@
 				BA328A131ABAF67500BD56DA /* main.cpp in Sources */,
 				BA328A1B1ABAFF7800BD56DA /* stochastic_processes.cpp in Sources */,
 				BA87FDD91ABC5903008DFF30 /* sle_process.cpp in Sources */,
+				BAA910CC1AC07934000B8DFE /* SLETest.cpp in Sources */,
 				BA328A1A1ABAF94800BD56DA /* ProcessTest.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

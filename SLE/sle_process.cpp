@@ -70,8 +70,8 @@ SLE::SLE(BrownianMotion* b, double kappa, double t_end, double tolerance){
     
     // Initialise maps
     SlitMap id(0.5, 0);
-    h.insert(std::pair<double, SlitMap>{0.0, id});
-    z.insert(std::pair<double, std::complex<double>>{0.0, 0.0+0.0i});
+    h.insert(std::pair<double, SlitMap>(0.0, id));
+    z.insert(std::pair<double, std::complex<double>>(0.0, 0.0+0.0i));
     
     double t = 0;
     double tOld;
@@ -84,6 +84,8 @@ SLE::SLE(BrownianMotion* b, double kappa, double t_end, double tolerance){
     while (t < t_end) {
         tOld = t;
         t = t + dt;
+        auto test = (*b)(t);
+        auto test_two = (*b)(tOld)[0];
         dx = (*b)(t)[0] - (*b)(tOld)[0];
         alpha = angle(t, tOld);
         candH.setDt(dt);
@@ -96,8 +98,29 @@ SLE::SLE(BrownianMotion* b, double kappa, double t_end, double tolerance){
     }
 }
 
+std::vector<double> SLE::getTimes(){
+    std::vector<double> result;
+    for (auto it = h.begin(); it!=h.end(); it++) {
+        result.push_back(it->first);
+    }
+    return result;
+}
 
+std::vector<double> SLE::getTimesFromZ(){
+    std::vector<double> result;
+    for (auto it = z.begin(); it!=z.end(); it++) {
+        result.push_back(it->first);
+    }
+    return result;
+}
 
+std::vector<std::complex<double>> SLE::getCurve(){
+    std::vector<std::complex<double>> result;
+    for (auto it = z.begin(); it!=z.end(); it++) {
+        result.push_back(it->second);
+    }
+    return result;
+}
 
 
 

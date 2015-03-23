@@ -68,12 +68,15 @@ std::vector<double> StochasticProcess::operator()(double time){
 std::vector<double> BrownianMotion::operator()(double time){
     std::vector<double> val;
     double change = 0;
-    if (time > times.back()) {
+    if (time <= 0) {
+        val = values.front();
+    } else if (time > times.back()) {
         double dt = time - times.back();
         for (int i = 0; i < dimension; i++) {
             change = rnorm(generator)*sqrt(dt);
             val.push_back(values.back()[i] + change);
         }
+        setValue(time, val);
     }
     else {
         int ind = indexAbove(times, time);
@@ -85,8 +88,8 @@ std::vector<double> BrownianMotion::operator()(double time){
             change = rnorm(generator)*sqrt(conditionalVariance);
             val.push_back(interp[i] + change);
         }
+        setValue(time, val);
     }
-    setValue(time, val);
     return val;
 };
 

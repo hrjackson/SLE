@@ -29,16 +29,20 @@ public:
 
 class SLE {
 private:
+    // Data
     BrownianMotion* b;
     double kappa;
     std::map<double, SlitMap> h;
     std::map<double, std::complex<double>> z;
+    // Functions
     double angle(double t, double tOld);
     std::complex<double> pointEval(std::complex<double> z);
 public:
     SLE(BrownianMotion* b, double kappa, double t_end, double tolerance);
     double operator()(double time, std::vector<double> point);
-    std::vector<double> curve(double time);
+    std::vector<double> getTimes();
+    std::vector<double> getTimesFromZ();
+    std::vector<std::complex<double>> getCurve();
 };
 
 

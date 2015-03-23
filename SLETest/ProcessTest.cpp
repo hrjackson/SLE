@@ -96,6 +96,8 @@ TEST_CASE( "BrownianMotion class tested", "[BrownianMotion]"){
     }
     
     SECTION( "Testing value generation") {
+        // First, check that we get the inital value when we look at time 0:
+        REQUIRE( B(0) == init);
         double t = 1.0;
         std::vector<double> val = B(t);
         REQUIRE( B.getValues().back() == val);
