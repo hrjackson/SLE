@@ -15,22 +15,32 @@
 #include <map>
 #include "stochastic_processes.h"
 
-class SLE : public Process {
-private:
-    BrownianMotion B;
-    double kappa;
-public:
-    double operator()(double time, std::vector<double> point);
-    std::vector<double> curve(double time);
-};
-
 class SlitMap {
 private:
     double alpha;
     double dt;
 public:
+    SlitMap(double alpha, double dt);
     std::complex<double> operator()(std::complex<double> z);
+    void setAlpha(double newAlpha);
+    void setDt(double newDt);
 };
+
+
+class SLE {
+private:
+    BrownianMotion* b;
+    double kappa;
+    std::map<double, SlitMap> h;
+    std::map<double, std::complex<double>> z;
+    double angle(double t, double tOld);
+    std::complex<double> pointEval(std::complex<double> z);
+public:
+    SLE(BrownianMotion* b, double kappa, double t_end, double tolerance);
+    double operator()(double time, std::vector<double> point);
+    std::vector<double> curve(double time);
+};
+
 
 
 
