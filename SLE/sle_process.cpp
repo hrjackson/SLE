@@ -84,8 +84,6 @@ SLE::SLE(BrownianMotion* b, double kappa, double t_end, double tolerance){
     while (t < t_end) {
         tOld = t;
         t = t + dt;
-        auto test = (*b)(t);
-        auto test_two = (*b)(tOld)[0];
         dx = (*b)(t)[0] - (*b)(tOld)[0];
         alpha = angle(t, tOld);
         candH.setDt(dt);
