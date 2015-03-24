@@ -39,14 +39,14 @@ void SlitMap::setDt(double newDt){
 ////////////////////////////////////////////////////////////////////////////////
 
 double SLE::angle(double t, double tOld){
-    double dx = (*b)(t)[0] - (*b)(tOld)[0];
+    double dx = ((*b)(t)[0] - (*b)(tOld)[0])*sqrt(kappa);
     double dt = t - tOld;
     double alpha;
     double v = pow(dx, 2)/dt;
     if (dx > 0) {
-        alpha = 1/2 - sqrt(v/(v+16))/2;
+        alpha = 0.5 - sqrt(v/(v+16))/2;
     } else {
-        alpha = 1/2 + sqrt(v/(v+16))/2;
+        alpha = 0.5 + sqrt(v/(v+16))/2;
     }
     return alpha;
 };
@@ -75,7 +75,7 @@ SLE::SLE(BrownianMotion* b, double kappa, double t_end, double tolerance){
     
     double t = 0;
     double tOld;
-    double dt = sqrt(tolerance);
+    double dt = 0.001; //sqrt(tolerance);
     double dx;
     double alpha;
     SlitMap candH(0.5, 0);
@@ -84,7 +84,7 @@ SLE::SLE(BrownianMotion* b, double kappa, double t_end, double tolerance){
     while (t < t_end) {
         tOld = t;
         t = t + dt;
-        dx = (*b)(t)[0] - (*b)(tOld)[0];
+        dx = ((*b)(t)[0] - (*b)(tOld)[0])*sqrt(kappa);
         alpha = angle(t, tOld);
         candH.setDt(dt);
         candH.setAlpha(alpha);
