@@ -38,7 +38,7 @@ private:
     double angle(double t, double tOld);
     std::complex<double> pointEval(std::complex<double> z);
 public:
-    SLE(BrownianMotion* b, double kappa, double t_end, double tolerance);
+    SLE(BrownianMotion* b, double kappa, double t_end, double tolerance, double dtMin);
     double operator()(double time, std::vector<double> point);
     std::vector<double> getTimes();
     std::vector<double> getTimesFromZ();

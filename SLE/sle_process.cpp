@@ -8,6 +8,7 @@
 
 #include "sle_process.h"
 #include <cmath>
+#include <iostream>
 
 ////////////////////////////////////////////////////////////////////////////////
 //// SlitMap member functions //////////////////////////////////////////////////
@@ -64,7 +65,7 @@ std::complex<double> SLE::pointEval(std::complex<double> z){
 //// SLE member functions //////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 
-SLE::SLE(BrownianMotion* b, double kappa, double t_end, double tolerance){
+SLE::SLE(BrownianMotion* b, double kappa, double t_end, double tolerance, double dtMin){
     this->b = b;
     this->kappa = kappa;
     
@@ -75,7 +76,7 @@ SLE::SLE(BrownianMotion* b, double kappa, double t_end, double tolerance){
     
     double t = 0;
     double tOld;
-    double dt = 0.001; //sqrt(tolerance);
+    double dt = 0.1; //sqrt(tolerance);
     double dx;
     double alpha;
     SlitMap candH(0.5, 0);
@@ -89,10 +90,34 @@ SLE::SLE(BrownianMotion* b, double kappa, double t_end, double tolerance){
         candH.setDt(dt);
         candH.setAlpha(alpha);
         candZ = pointEval(candH(0));
+        //std::complex<double> test = z[tOld];
         
-        // We'll sort out adaptivity later
+        double moved = abs(candZ - z[tOld]);
+        
+        while ( (moved > tolerance) | (moved < tolerance/2) ) {
+            if ( moved > tolerance ) {
+                dt = 0.8*dt;
+            }
+            else {
+                dt = 1.2*dt;
+            }
+            
+            t = tOld + dt;
+            dx = ((*b)(t)[0] - (*b)(tOld)[0])*sqrt(kappa);
+            alpha = angle(t, tOld);
+            candH.setDt(dt);
+            candH.setAlpha(alpha);
+            candZ = pointEval(candH(0));
+            
+            moved = abs(candZ - z[tOld]);
+            
+            if (dt < dtMin) {
+                moved = 3*tolerance/4;
+            }
+        }
         h.insert(std::pair<double, SlitMap>{t, candH});
         z.insert(std::pair<double, std::complex<double>>{t, candZ});
+        std::cout << t << std::endl;
     }
 }
 

@@ -16,15 +16,16 @@
 
 int main(int argc, const char * argv[]) {
     // Parameters
-    double kappa = 1;
+    double kappa = 8;
     double t_end = 1;
     double tolerance = 0.01;
+    double dtMin = 0.000001;
     
     
     // Start
     std::vector<double> init(1, 0.0);
     BrownianMotion B(init);
-    SLE g(&B, kappa, t_end, tolerance);
+    SLE g(&B, kappa, t_end, tolerance, dtMin);
     
     std::vector<std::complex<double>> curve = g.getCurve();
     
