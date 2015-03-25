@@ -16,10 +16,10 @@
 
 int main(int argc, const char * argv[]) {
     // Parameters
-    double kappa = 8;
+    double kappa = 4;
     double t_end = 1;
     double tolerance = 0.01;
-    double dtMin = 0.000001;
+    double dtMin = 0;
     
     
     // Start
@@ -47,7 +47,7 @@ int main(int argc, const char * argv[]) {
 
     // Draw in the SLE
     cairo_set_source_rgb(cr, 0, 0, 0);
-    cairo_set_line_width (cr, 0.01);
+    cairo_set_line_width (cr, 0.005);
 
     cairo_move_to (cr, 2, 2);
     for (int i = 1; i < curve.size(); i++) {

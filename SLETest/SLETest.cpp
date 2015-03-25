@@ -59,7 +59,8 @@ TEST_CASE( "SLE class tested", "[SLE]"){
     double kappa = 2;
     double t_end = 1;
     double tolerance = 0.1;
-    SLE g(&B, kappa, t_end, tolerance);
+    double t_min = 0;
+    SLE g(&B, kappa, t_end, tolerance, t_min);
     
     REQUIRE( g.getTimes() == g.getTimesFromZ() );
     REQUIRE( g.getTimes().back() > t_end );
