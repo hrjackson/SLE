@@ -61,6 +61,19 @@ std::complex<double> SLE::pointEval(std::complex<double> z){
 }
 
 
+void SLE::singleUpdate(double dt,
+                       double& t,
+                       SlitMap& candH,
+                       std::complex<double>& candZ,
+                       double& moved){
+    double alpha = angle(t+dt, t);
+    candH.setDt(dt);
+    candH.setAlpha(alpha);
+    candZ = pointEval(candH(0));
+    moved = abs(candZ - z[t]);
+}
+
+
 ////////////////////////////////////////////////////////////////////////////////
 //// SLE member functions //////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
@@ -75,48 +88,27 @@ SLE::SLE(BrownianMotion* b, double kappa, double t_end, double tolerance, double
     z.insert(std::pair<double, std::complex<double>>(0.0, 0.0+0.0i));
     
     double t = 0;
-    double tOld;
     double dt = 0.25;
-    double dx;
-    double alpha;
     SlitMap candH(0.5, 0);
     std::complex<double> candZ;
+    double moved;
     
     while (t < t_end) {
-        tOld = t;
-        t = t + dt;
-        dx = ((*b)(t)[0] - (*b)(tOld)[0])*sqrt(kappa);
-        alpha = angle(t, tOld);
-        candH.setDt(dt);
-        candH.setAlpha(alpha);
-        candZ = pointEval(candH(0));
-        //std::complex<double> test = z[tOld];
-        
-        double moved = abs(candZ - z[tOld]);
-        
-        while ( moved > tolerance ) {
-            dt = 0.25*dt;
-            
-            std::cout << "dt = " << dt << std::endl;
-            
-            t = tOld + dt;
-            dx = ((*b)(t)[0] - (*b)(tOld)[0])*sqrt(kappa);
-            alpha = angle(t, tOld);
-            candH.setDt(dt);
-            candH.setAlpha(alpha);
-            candZ = pointEval(candH(0));
-            
-            moved = abs(candZ - z[tOld]);
-            
-            //if (dt < dtMin) {
-            //    moved = 3*tolerance/4;
-            //}
+        // Adaptive loop
+        while (true) {
+            singleUpdate(dt, t, candH, candZ, moved);
+            if (moved < tolerance) {
+                break;
+            } else {
+                dt = 0.8*dt;
+            }
         }
         
         if (moved < tolerance/2) {
-            dt = 2.0*dt;
+            dt = 1.2*dt;
         }
         
+        t = t+dt;
         h.insert(std::pair<double, SlitMap>{t, candH});
         z.insert(std::pair<double, std::complex<double>>{t, candZ});
         std::cout << t << std::endl;

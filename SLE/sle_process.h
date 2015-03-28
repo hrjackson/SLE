@@ -37,6 +37,11 @@ private:
     // Functions
     double angle(double t, double tOld);
     std::complex<double> pointEval(std::complex<double> z);
+    void singleUpdate(double dt,
+                      double& t,
+                      SlitMap& candH,
+                      std::complex<double>& candZ,
+                      double& moved);
 public:
     SLE(BrownianMotion* b, double kappa, double t_end, double tolerance, double dtMin);
     double operator()(double time, std::vector<double> point);
