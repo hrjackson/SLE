@@ -76,7 +76,7 @@ SLE::SLE(BrownianMotion* b, double kappa, double t_end, double tolerance, double
     
     double t = 0;
     double tOld;
-    double dt = 0.1; //sqrt(tolerance);
+    double dt = 0.25;
     double dx;
     double alpha;
     SlitMap candH(0.5, 0);
@@ -94,13 +94,10 @@ SLE::SLE(BrownianMotion* b, double kappa, double t_end, double tolerance, double
         
         double moved = abs(candZ - z[tOld]);
         
-        while ( (moved > tolerance) | (moved < tolerance/2) ) {
-            if ( moved > tolerance ) {
-                dt = 0.8*dt;
-            }
-            else {
-                dt = 1.2*dt;
-            }
+        while ( moved > tolerance ) {
+            dt = 0.25*dt;
+            
+            std::cout << "dt = " << dt << std::endl;
             
             t = tOld + dt;
             dx = ((*b)(t)[0] - (*b)(tOld)[0])*sqrt(kappa);
@@ -111,10 +108,15 @@ SLE::SLE(BrownianMotion* b, double kappa, double t_end, double tolerance, double
             
             moved = abs(candZ - z[tOld]);
             
-            if (dt < dtMin) {
-                moved = 3*tolerance/4;
-            }
+            //if (dt < dtMin) {
+            //    moved = 3*tolerance/4;
+            //}
         }
+        
+        if (moved < tolerance/2) {
+            dt = 2.0*dt;
+        }
+        
         h.insert(std::pair<double, SlitMap>{t, candH});
         z.insert(std::pair<double, std::complex<double>>{t, candZ});
         std::cout << t << std::endl;

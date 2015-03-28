@@ -16,15 +16,21 @@
 
 int main(int argc, const char * argv[]) {
     // Parameters
-    double kappa = 4;
+    double kappa = 2;
     double t_end = 1;
     double tolerance = 0.01;
     double dtMin = 0;
     
     
     // Start
+    std::mt19937_64 generator;
+    generator.seed(6);
     std::vector<double> init(1, 0.0);
-    BrownianMotion B(init);
+    std::vector<double> mid(1, -0.5);
+    std::vector<double> end(1, 1.0);
+    BrownianMotion B(init, generator);
+    B.setValue(0.5, mid);
+    B.setValue(1, end);
     SLE g(&B, kappa, t_end, tolerance, dtMin);
     
     std::vector<std::complex<double>> curve = g.getCurve();

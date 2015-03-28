@@ -55,6 +55,10 @@ public:
         long long seed = std::chrono::system_clock::now().time_since_epoch().count();
         generator.seed(seed);
     };
+    BrownianMotion(std::vector<double> initial_pos, std::mt19937_64 generator)
+    :Process(initial_pos) {
+        this->generator = generator;
+    };
 };
 
 #endif /* defined(__SLE__stochastic_processes__) */
