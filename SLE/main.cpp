@@ -23,8 +23,8 @@ int main(int argc, const char * argv[]) {
     double dtMin = 0;
     int numFrames = 100;
     
-    int width = 1000;
-    int height = 1000;
+    int width = 1920;
+    int height = 1080;
     int scale = 500;
     
     
@@ -48,7 +48,7 @@ int main(int argc, const char * argv[]) {
     forwardhalf.output("fh.png");
     
     plot reversehalf(width, height, scale);
-    reversehalf.drawReverseSLE(g, 0.1);
+    reversehalf.drawReverseSLE(g, 0.5);
     reversehalf.output("rh.png");
     
     

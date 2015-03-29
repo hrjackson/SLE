@@ -44,7 +44,8 @@ private:
                       double& t,
                       SlitMap& candH,
                       std::complex<double>& candZ,
-                      double& moved);
+                      double& moved,
+                      double& slitSize);
     std::vector<double> findAdmissibleTimes(double t_end);
     void constructProcess(double t_end, double tolerance, double dtMin);
     void adaptiveIncrement(double t_start,

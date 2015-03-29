@@ -65,7 +65,8 @@ void SLE::singleUpdate(double dt,
                        double& t,
                        SlitMap& candH,
                        std::complex<double>& candZ,
-                       double& moved){
+                       double& moved,
+                       double& slitSize){
     double alpha = angle(t+dt, t);
     candH.setDt(dt);
     candH.setAlpha(alpha);
@@ -73,6 +74,7 @@ void SLE::singleUpdate(double dt,
     //std::cout << "old pos = " << z[t] << std::endl;
     //std::cout << "new pos = " << candZ << std::endl;
     moved = abs(candZ - z[t]);
+    slitSize = abs( candH(0) );
 }
 
 std::vector<double> SLE::findAdmissibleTimes(double t_end){
@@ -102,6 +104,7 @@ void SLE::adaptiveIncrement(double t_start,
     double t = t_start;
     double dt = 1;
     double moved;
+    double slitSize;
     bool ended = false;
     
     while (!ended) {
@@ -113,8 +116,8 @@ void SLE::adaptiveIncrement(double t_start,
         
         // Adaptive loop
         while (true) {
-            singleUpdate(dt, t, candH, candZ, moved);
-            if (moved < tolerance) {
+            singleUpdate(dt, t, candH, candZ, moved, slitSize);
+            if ( (moved < tolerance) && (slitSize < 3*tolerance) ) {
                 break;
             } else {
                 dt = std::max(0.8*dt, dtMin);
