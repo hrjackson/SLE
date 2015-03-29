@@ -123,7 +123,7 @@ void SLE::adaptiveIncrement(double t_start,
             }
         }
         
-        // Make sure there are no
+        // Make sure there are no rounding errors
         if (ended) {
             t = t_end;
         } else {

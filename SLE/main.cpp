@@ -55,6 +55,7 @@ int main(int argc, const char * argv[]) {
     // Draw in the SLE
     cairo_set_source_rgb(cr, 0, 0, 0);
     cairo_set_line_width (cr, 0.002);
+    cairo_set_line_join(cr, CAIRO_LINE_JOIN_ROUND);
 
     cairo_move_to (cr, 2, 2);
     for (int i = 1; i < curve.size(); i++) {
