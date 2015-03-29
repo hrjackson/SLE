@@ -16,7 +16,7 @@
 
 int main(int argc, const char * argv[]) {
     // Parameters
-    double kappa = 2;
+    double kappa = 6;
     double t_end = 1;
     double tolerance = 0.01;
     double dtMin = 0;
@@ -25,10 +25,10 @@ int main(int argc, const char * argv[]) {
     
     // Start
     std::mt19937_64 generator;
-    generator.seed(6);
+    generator.seed(2);
     std::vector<double> init(1, 0.0);
-    std::vector<double> mid(1, -0.5);
-    std::vector<double> end(1, 1.0);
+    std::vector<double> mid(1, -0.6);
+    std::vector<double> end(1, 0.2);
     BrownianMotion B(init, generator);
     B.setValue(0.5, mid);
     B.setValue(1, end);
@@ -54,7 +54,7 @@ int main(int argc, const char * argv[]) {
 
     // Draw in the SLE
     cairo_set_source_rgb(cr, 0, 0, 0);
-    cairo_set_line_width (cr, 0.005);
+    cairo_set_line_width (cr, 0.002);
 
     cairo_move_to (cr, 2, 2);
     for (int i = 1; i < curve.size(); i++) {

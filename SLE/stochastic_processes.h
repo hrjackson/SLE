@@ -22,7 +22,7 @@ protected:
     
     // Functions
     int indexAbove(std::vector<double>, double time);
-    std::vector<std::vector<double> > insert(std::vector<std::vector<double> > vec,
+    std::vector<std::vector<double>> insert(std::vector<std::vector<double>> vec,
                                              int index,
                                              std::vector<double>);
     std::vector<double> interpolate(std::vector<double> times,

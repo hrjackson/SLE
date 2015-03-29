@@ -85,16 +85,21 @@ std::vector<double> SLE::findAdmissibleTimes(double t_end){
     return admissibleTimes;
 }
 
-void SLE::constructProcess(double t_end, double tolerance){
+void SLE::constructProcess(double t_end, double tolerance, double dtMin){
     SlitMap candH(0.5, 0);
     std::complex<double> candZ;
     
     for (auto it = admissibleTimes.begin()+1; it != admissibleTimes.end(); ++it) {
-        adaptiveIncrement(*(it-1), *it, tolerance, candH, candZ);
+        adaptiveIncrement(*(it-1), *it, tolerance, dtMin, candH, candZ);
     }
 }
 
-void SLE::adaptiveIncrement(double t_start, double t_end, double tolerance, SlitMap& candH, std::complex<double>& candZ){
+void SLE::adaptiveIncrement(double t_start,
+                            double t_end,
+                            double tolerance,
+                            double dtMin,
+                            SlitMap& candH,
+                            std::complex<double>& candZ){
     double t = t_start;
     double dt = 1;
     double moved;
@@ -113,7 +118,7 @@ void SLE::adaptiveIncrement(double t_start, double t_end, double tolerance, Slit
             if (moved < tolerance) {
                 break;
             } else {
-                dt = 0.8*dt;
+                dt = std::max(0.8*dt, dtMin);
                 ended = false;
             }
         }
@@ -152,7 +157,7 @@ SLE::SLE(BrownianMotion* b, double kappa, double t_end, double tolerance, double
     h.insert(std::pair<double, SlitMap>(0.0, id));
     z.insert(std::pair<double, std::complex<double>>(0.0, 0.0+0.0i));
     
-    constructProcess(t_end, tolerance);
+    constructProcess(t_end, tolerance, dtMin);
 }
 
 std::vector<double> SLE::getTimes(){

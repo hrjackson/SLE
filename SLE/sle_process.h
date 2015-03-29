@@ -46,10 +46,11 @@ private:
                       std::complex<double>& candZ,
                       double& moved);
     std::vector<double> findAdmissibleTimes(double t_end);
-    void constructProcess(double t_end, double tolerance);
+    void constructProcess(double t_end, double tolerance, double dtMin);
     void adaptiveIncrement(double t_start,
                            double t_end,
                            double tolerance,
+                           double dtMin,
                            SlitMap& candH,
                            std::complex<double>& candZ);
 public:
