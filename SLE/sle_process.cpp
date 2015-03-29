@@ -188,33 +188,36 @@ std::vector<std::complex<double>> SLE::getCurve(){
 
 std::complex<double> SLE::forwardPoint(double time, std::complex<double> z){
     std::complex<double> result = z;
-    for (auto it = h.begin(); (it->first) <= time; ++it) {
-        result = (it->second)(result);
+    for (auto rit = h.rbegin(); rit != h.rend(); ++rit) {
+        if ((rit->first) <= time) {
+            result = (rit->second)(result);
+        }
     }
     return result;
 }
 
-std::complex<double> SLE::reversePoint(double time, std::complex<double> z){
+std::complex<double> SLE::reversePoint(double start, double time, std::complex<double> z){
     std::complex<double> result = z;
-    double t_end = h.end()->first;
-    for (auto rit = h.rbegin(); (rit->first) >= t_end - time; ++rit) {
-        result = (rit->second)(result);
+    //double t_end = h.rbegin()->first;
+    for (auto it = h.lower_bound(time); it != h.lower_bound(start); --it) {
+        result = (it->second)(result);
     }
     return result;
 }
 
 std::vector<std::complex<double>> SLE::forwardLine(double time){
     std::vector<std::complex<double>> result;
-    for (auto it = h.begin(); (it->first) <= time; ++it) {
-        result.push_back(this->forwardPoint(it->first, 0));
+    for (auto it = h.begin(); it != h.lower_bound(time); ++it) {
+        result.push_back(forwardPoint(it->first, 0));
     }
     return result;
 }
 
 std::vector<std::complex<double>> SLE::reverseLine(double time){
     std::vector<std::complex<double>> result;
-    for (auto it = h.begin(); (it->first) <= time; ++it) {
-        result.push_back(this->reversePoint(it->first, 0));
+    double t_end = h.rbegin()->first;
+    for (auto it = h.lower_bound(t_end - time); it!=h.end(); ++it) {
+        result.push_back(reversePoint(t_end - time, it->first, 0));
     }
     return result;
 }

@@ -65,7 +65,7 @@ public:
     std::vector<double> getTimesFromZ();
     std::vector<std::complex<double>> getCurve();
     std::complex<double> forwardPoint(double time, std::complex<double> z);
-    std::complex<double> reversePoint(double time, std::complex<double> z);
+    std::complex<double> reversePoint(double start, double time, std::complex<double> z);
     std::vector<std::complex<double>> forwardLine(double time);
     std::vector<std::complex<double>> reverseLine(double time);
 };

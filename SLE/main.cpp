@@ -13,14 +13,19 @@
 #include "cairo.h"
 #include "stochastic_processes.h"
 #include "sle_process.h"
+#include "plot.h"
 
 int main(int argc, const char * argv[]) {
     // Parameters
-    double kappa = 6;
+    double kappa = 2;
     double t_end = 1;
     double tolerance = 0.01;
     double dtMin = 0;
     int numFrames = 100;
+    
+    int width = 1000;
+    int height = 1000;
+    int scale = 500;
     
     
     // Start
@@ -34,9 +39,20 @@ int main(int argc, const char * argv[]) {
     B.setValue(1, end);
     SLE g(&B, kappa, t_end, tolerance, dtMin, numFrames);
     
+    plot pl(width, height, scale);
+    pl.drawSLE(g, t_end);
+    pl.output("test.png");
+    
+    plot forwardhalf(width, height, scale);
+    forwardhalf.drawSLE(g, 0.5);
+    forwardhalf.output("fh.png");
+    
+    plot reversehalf(width, height, scale);
+    reversehalf.drawReverseSLE(g, 0.1);
+    reversehalf.output("rh.png");
     
     
-    
+    /*
     std::vector<std::complex<double>> curve = g.getCurve();
     
     cairo_surface_t *surface;
@@ -66,19 +82,20 @@ int main(int argc, const char * argv[]) {
     }
     cairo_stroke(cr);
     
-    /*
+    
     cairo_select_font_face(cr, "Sans", CAIRO_FONT_SLANT_NORMAL,
                            CAIRO_FONT_WEIGHT_NORMAL);
     cairo_set_font_size(cr, 40.0);
     
     cairo_move_to(cr, 50, 50);
     cairo_show_text(cr, "Hello GitHub!");
-    */
+    
     
     // Write output and clean up
     cairo_surface_write_to_png(surface, "image.png");
     cairo_destroy(cr);
     cairo_surface_destroy(surface);
+    */
     
     return 0;
 }
