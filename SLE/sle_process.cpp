@@ -61,7 +61,6 @@ std::complex<double> SLE::pointEval(std::complex<double> z){
     return result;
 }
 
-
 void SLE::singleUpdate(double dt,
                        double& t,
                        SlitMap& candH,
@@ -146,10 +145,13 @@ void SLE::adaptiveIncrement(double t_start,
 //// SLE member functions //////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 
-SLE::SLE(BrownianMotion* b, double kappa, double t_end, double tolerance, double dtMin, int numFrames){
-    this->b = b;
-    this->kappa = kappa;
-    this->numFrames = numFrames;
+SLE::SLE(BrownianMotion* b,
+         double kappa,
+         double t_end,
+         double tolerance,
+         double dtMin,
+         int numFrames)
+:b(b), kappa(kappa), numFrames(numFrames){
     admissibleTimes = findAdmissibleTimes(t_end);
     
     // Initialise maps
@@ -184,7 +186,38 @@ std::vector<std::complex<double>> SLE::getCurve(){
     return result;
 }
 
+std::complex<double> SLE::forwardPoint(double time, std::complex<double> z){
+    std::complex<double> result = z;
+    for (auto it = h.begin(); (it->first) <= time; ++it) {
+        result = (it->second)(result);
+    }
+    return result;
+}
 
+std::complex<double> SLE::reversePoint(double time, std::complex<double> z){
+    std::complex<double> result = z;
+    double t_end = h.end()->first;
+    for (auto rit = h.rbegin(); (rit->first) >= t_end - time; ++rit) {
+        result = (rit->second)(result);
+    }
+    return result;
+}
+
+std::vector<std::complex<double>> SLE::forwardLine(double time){
+    std::vector<std::complex<double>> result;
+    for (auto it = h.begin(); (it->first) <= time; ++it) {
+        result.push_back(this->forwardPoint(it->first, 0));
+    }
+    return result;
+}
+
+std::vector<std::complex<double>> SLE::reverseLine(double time){
+    std::vector<std::complex<double>> result;
+    for (auto it = h.begin(); (it->first) <= time; ++it) {
+        result.push_back(this->reversePoint(it->first, 0));
+    }
+    return result;
+}
 
 
 

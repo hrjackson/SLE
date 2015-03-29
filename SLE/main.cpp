@@ -34,6 +34,9 @@ int main(int argc, const char * argv[]) {
     B.setValue(1, end);
     SLE g(&B, kappa, t_end, tolerance, dtMin, numFrames);
     
+    
+    
+    
     std::vector<std::complex<double>> curve = g.getCurve();
     
     cairo_surface_t *surface;
