@@ -20,6 +20,7 @@ int main(int argc, const char * argv[]) {
     double t_end = 1;
     double tolerance = 0.01;
     double dtMin = 0;
+    int numFrames = 100;
     
     
     // Start
@@ -31,7 +32,7 @@ int main(int argc, const char * argv[]) {
     BrownianMotion B(init, generator);
     B.setValue(0.5, mid);
     B.setValue(1, end);
-    SLE g(&B, kappa, t_end, tolerance, dtMin);
+    SLE g(&B, kappa, t_end, tolerance, dtMin, numFrames);
     
     std::vector<std::complex<double>> curve = g.getCurve();
     

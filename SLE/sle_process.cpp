@@ -9,6 +9,7 @@
 #include "sle_process.h"
 #include <cmath>
 #include <iostream>
+#include <algorithm>
 
 ////////////////////////////////////////////////////////////////////////////////
 //// SlitMap member functions //////////////////////////////////////////////////
@@ -70,30 +71,42 @@ void SLE::singleUpdate(double dt,
     candH.setDt(dt);
     candH.setAlpha(alpha);
     candZ = pointEval(candH(0));
+    //std::cout << "old pos = " << z[t] << std::endl;
+    //std::cout << "new pos = " << candZ << std::endl;
     moved = abs(candZ - z[t]);
 }
 
+std::vector<double> SLE::findAdmissibleTimes(double t_end){
+    double dt = t_end/(numFrames-1);
+    std::vector<double> admissibleTimes(1, 0.0);
+    for (int i = 1; i < numFrames; ++i) {
+        admissibleTimes.push_back(i*dt);
+    }
+    return admissibleTimes;
+}
 
-////////////////////////////////////////////////////////////////////////////////
-//// SLE member functions //////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////
-
-SLE::SLE(BrownianMotion* b, double kappa, double t_end, double tolerance, double dtMin){
-    this->b = b;
-    this->kappa = kappa;
-    
-    // Initialise maps
-    SlitMap id(0.5, 0);
-    h.insert(std::pair<double, SlitMap>(0.0, id));
-    z.insert(std::pair<double, std::complex<double>>(0.0, 0.0+0.0i));
-    
-    double t = 0;
-    double dt = 0.25;
+void SLE::constructProcess(double t_end, double tolerance){
     SlitMap candH(0.5, 0);
     std::complex<double> candZ;
-    double moved;
     
-    while (t < t_end) {
+    for (auto it = admissibleTimes.begin()+1; it != admissibleTimes.end(); ++it) {
+        adaptiveIncrement(*(it-1), *it, tolerance, candH, candZ);
+    }
+}
+
+void SLE::adaptiveIncrement(double t_start, double t_end, double tolerance, SlitMap& candH, std::complex<double>& candZ){
+    double t = t_start;
+    double dt = 1;
+    double moved;
+    bool ended = false;
+    
+    while (!ended) {
+        // Make sure that we hit the end exactly
+        if (t+dt > t_end) {
+            dt = t_end - t;
+            ended = true;
+        }
+        
         // Adaptive loop
         while (true) {
             singleUpdate(dt, t, candH, candZ, moved);
@@ -101,18 +114,45 @@ SLE::SLE(BrownianMotion* b, double kappa, double t_end, double tolerance, double
                 break;
             } else {
                 dt = 0.8*dt;
+                ended = false;
             }
         }
+        
+        // Make sure there are no
+        if (ended) {
+            t = t_end;
+        } else {
+            t = t+dt;
+        }
+        
+        h.insert(std::pair<double, SlitMap>{t, candH});
+        z.insert(std::pair<double, std::complex<double>>{t, candZ});
+        std::cout << t << std::endl;
         
         if (moved < tolerance/2) {
             dt = 1.2*dt;
         }
-        
-        t = t+dt;
-        h.insert(std::pair<double, SlitMap>{t, candH});
-        z.insert(std::pair<double, std::complex<double>>{t, candZ});
-        std::cout << t << std::endl;
     }
+    
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+//// SLE member functions //////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+
+SLE::SLE(BrownianMotion* b, double kappa, double t_end, double tolerance, double dtMin, int numFrames){
+    this->b = b;
+    this->kappa = kappa;
+    this->numFrames = numFrames;
+    admissibleTimes = findAdmissibleTimes(t_end);
+    
+    // Initialise maps
+    SlitMap id(0.5, 0);
+    h.insert(std::pair<double, SlitMap>(0.0, id));
+    z.insert(std::pair<double, std::complex<double>>(0.0, 0.0+0.0i));
+    
+    constructProcess(t_end, tolerance);
 }
 
 std::vector<double> SLE::getTimes(){

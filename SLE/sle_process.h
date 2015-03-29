@@ -29,12 +29,15 @@ public:
 
 class SLE {
 private:
-    // Data
+    /*---- Data ----*/
     BrownianMotion* b;
     double kappa;
     std::map<double, SlitMap> h;
     std::map<double, std::complex<double>> z;
-    // Functions
+    int numFrames;
+    // A vector of times which are guaranteed to be hit by adaptive process
+    std::vector<double> admissibleTimes;
+    /*---- Functions ----*/
     double angle(double t, double tOld);
     std::complex<double> pointEval(std::complex<double> z);
     void singleUpdate(double dt,
@@ -42,8 +45,20 @@ private:
                       SlitMap& candH,
                       std::complex<double>& candZ,
                       double& moved);
+    std::vector<double> findAdmissibleTimes(double t_end);
+    void constructProcess(double t_end, double tolerance);
+    void adaptiveIncrement(double t_start,
+                           double t_end,
+                           double tolerance,
+                           SlitMap& candH,
+                           std::complex<double>& candZ);
 public:
-    SLE(BrownianMotion* b, double kappa, double t_end, double tolerance, double dtMin);
+    SLE(BrownianMotion* b,
+        double kappa,
+        double t_end,
+        double tolerance,
+        double dtMin,
+        int numFrames);
     double operator()(double time, std::vector<double> point);
     std::vector<double> getTimes();
     std::vector<double> getTimesFromZ();
