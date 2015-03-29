@@ -173,6 +173,10 @@ std::vector<double> SLE::getTimes(){
     return result;
 }
 
+std::vector<double> SLE::FrameTimes(){
+    return admissibleTimes;
+}
+
 std::vector<double> SLE::getTimesFromZ(){
     std::vector<double> result;
     for (auto it = z.begin(); it!=z.end(); it++) {

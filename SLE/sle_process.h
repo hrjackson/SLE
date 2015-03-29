@@ -63,6 +63,7 @@ public:
         int numFrames);
     double operator()(double time, std::vector<double> point);
     std::vector<double> getTimes();
+    std::vector<double> FrameTimes();
     std::vector<double> getTimesFromZ();
     std::vector<std::complex<double>> getCurve();
     std::complex<double> forwardPoint(double time, std::complex<double> z);

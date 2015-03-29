@@ -21,7 +21,7 @@ int main(int argc, const char * argv[]) {
     double t_end = 1;
     double tolerance = 0.01;
     double dtMin = 0;
-    int numFrames = 100;
+    int numFrames = 1800;
     
     int width = 1920;
     int height = 1080;

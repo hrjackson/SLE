@@ -22,7 +22,7 @@ plot::plot(int width, int height, int scale)
     cairo_set_line_join(cr, CAIRO_LINE_JOIN_ROUND);
     
     // Make the background white
-    cairo_rectangle(cr, 0, 0, width/scale, height/scale);
+    cairo_rectangle(cr, 0, 0, (double)(width)/scale, (double)(height)/scale);
     cairo_set_source_rgb(cr, 1, 1, 1);
     cairo_fill(cr);
 }
