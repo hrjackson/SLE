@@ -19,7 +19,7 @@ int main(int argc, const char * argv[]) {
     // Parameters
     double kappa = 2;
     double t_end = 1;
-    double tolerance = 0.01;
+    double tolerance = 0.05;
     double dtMin = 0;
     int numFrames = 1800;
     
@@ -45,7 +45,7 @@ int main(int argc, const char * argv[]) {
     
     plot forwardhalf(width, height, scale);
     forwardhalf.drawSLE(g, 0.5);
-    forwardhalf.output("fh.png");
+    forwardhalf.output("sub/fh.png");
     
     plot reversehalf(width, height, scale);
     reversehalf.drawReverseSLE(g, 0.5);
