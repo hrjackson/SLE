@@ -117,7 +117,7 @@ void SLE::adaptiveIncrement(double t_start,
         // Adaptive loop
         while (true) {
             singleUpdate(dt, t, candH, candZ, moved, slitSize);
-            if ( (moved < tolerance) && (slitSize < 3*tolerance) ) {
+            if ( (moved < tolerance) && (slitSize < 2*tolerance) ) {
                 break;
             } else {
                 dt = std::max(0.8*dt, dtMin);
