@@ -34,6 +34,7 @@ public:
     void drawLine(std::vector<std::complex<double>> points);
     void drawSLE(SLE& g, double time);
     void drawReverseSLE(SLE& g, double time);
+    void drawUnCentredReverseSLE(SLE& g, double time);
     void output(const char* filename);
 };
 

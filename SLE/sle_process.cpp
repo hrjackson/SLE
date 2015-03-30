@@ -229,6 +229,18 @@ std::vector<std::complex<double>> SLE::reverseLine(double time){
     return result;
 }
 
+std::vector<std::complex<double>> SLE::unCentredReverseLine(double time){
+    std::vector<std::complex<double>> result;
+    double t_end = h.rbegin()->first;
+    std::complex<double> point;
+    for (auto it = h.lower_bound(t_end - time); it!=h.end(); ++it) {
+        point = reversePoint(t_end - time, it->first, 0);
+        point += (*b)(t_end - time)[0];
+        result.push_back(point);
+    }
+    return result;
+}
+
 
 
 
