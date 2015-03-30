@@ -36,6 +36,11 @@ plot::plot(int width, int height, int scale)
     cairo_stroke(cr);
 }
 
+plot::~plot(){
+    cairo_destroy(cr);
+    cairo_surface_destroy(surface);
+}
+
 void plot::drawLine(std::vector<std::complex<double>> points){
     if (points.size() != 0){
         cairo_set_source_rgb(cr, 0, 0, 0);
@@ -61,4 +66,43 @@ void plot::drawReverseSLE(SLE &g, double time){
 
 void plot::output(const char* filename){
     cairo_surface_write_to_png(surface, filename);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//// Generate frame funcion ////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+
+void generateFrames(int width, int height, int scale, SLE& g){
+    
+    // Get times for loop
+    std::vector<double> times = g.FrameTimes();
+    
+    // Set up filenames
+    std::string strForward = "./forward/";
+    std::string strReverse = "./reverse/";
+    std::string frdName;
+    std::string rvsName;
+    std::stringstream ss;
+    
+    int frame = 0;
+    
+    for (auto it = times.begin(); it != times.end(); ++it) {
+        
+        ss << std::setfill('0') << std::setw(4);
+        ss << frame++;
+        frdName = strForward + ss.str() + ".png";
+        rvsName = strReverse + ss.str() + ".png";
+        ss.str(std::string());
+        ss.clear();
+        
+        
+        plot forward(width, height, scale);
+        plot reverse(width, height, scale);
+        
+        forward.drawSLE(g, *it);
+        reverse.drawReverseSLE(g, *it);
+        
+        forward.output(frdName.c_str());
+        reverse.output(rvsName.c_str());
+    }
 }

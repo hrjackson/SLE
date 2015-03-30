@@ -9,9 +9,6 @@
 #include <iostream>
 #include <vector>
 #include <complex>
-#include <string>
-#include <sstream>
-#include <iomanip>
 
 #include "cairo.h"
 #include "stochastic_processes.h"
@@ -22,9 +19,9 @@ int main(int argc, const char * argv[]) {
     // Parameters
     double kappa = 2;
     double t_end = 1;
-    double tolerance = 0.02;
+    double tolerance = 0.01;
     double dtMin = 0;
-    int numFrames = 31;
+    int numFrames = 1800;
     
     int width = 1920;
     int height = 1080;
@@ -42,39 +39,8 @@ int main(int argc, const char * argv[]) {
     B.setValue(1, end);
     SLE g(&B, kappa, t_end, tolerance, dtMin, numFrames);
     
-    // Get times for loop
-    std::vector<double> times = g.FrameTimes();
+    generateFrames(width, height, scale, g);
     
-    // Set up filenames
-    std::string strForward = "./forward/";
-    std::string strReverse = "./reverse/";
-    std::string frdName;
-    std::string rvsName;
-    std::stringstream ss;
-    
-    int frame = 0;
-    
-    for (auto it = times.begin(); it != times.end(); ++it) {
-        
-        ss << std::setfill('0') << std::setw(4);
-        ss << frame++;
-        frdName = strForward + ss.str() + ".png";
-        rvsName = strReverse + ss.str() + ".png";
-        ss.str(std::string());
-        ss.clear();
-        
-        
-        plot forward(width, height, scale);
-        plot reverse(width, height, scale);
-        
-        forward.drawSLE(g, *it);
-        reverse.drawReverseSLE(g, *it);
-        
-        
-        
-        forward.output(frdName.c_str());
-        reverse.output(rvsName.c_str());
-    }
     
     return 0;
 }
