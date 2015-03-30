@@ -37,24 +37,26 @@ plot::plot(int width, int height, int scale)
 }
 
 void plot::drawLine(std::vector<std::complex<double>> points){
-    cairo_set_source_rgb(cr, 0, 0, 0);
-    cairo_set_line_width (cr, 0.002);
-    std::complex<double> start = points.front();
-    cairo_move_to(cr, start.real() + originRe, originIm - start.imag());
-    for (auto it = ++points.begin(); it != points.end(); ++it) {
-        cairo_line_to(cr, (*it).real() + originRe, originIm - (*it).imag());
+    if (points.size() != 0){
+        cairo_set_source_rgb(cr, 0, 0, 0);
+        cairo_set_line_width (cr, 0.002);
+        std::complex<double> start = points.front();
+        cairo_move_to(cr, start.real() + originRe, originIm - start.imag());
+        for (auto it = ++points.begin(); it != points.end(); ++it) {
+            cairo_line_to(cr, (*it).real() + originRe, originIm - (*it).imag());
+        }
+        cairo_stroke(cr);
     }
-    cairo_stroke(cr);
 }
 
 void plot::drawSLE(SLE& g, double time){
     std::vector<std::complex<double>> line = g.forwardLine(time);
-    this->plot::drawLine(line);
+    drawLine(line);
 }
 
 void plot::drawReverseSLE(SLE &g, double time){
     std::vector<std::complex<double>> line = g.reverseLine(time);
-    this->plot::drawLine(line);
+    drawLine(line);
 }
 
 void plot::output(const char* filename){
