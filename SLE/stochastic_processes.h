@@ -11,23 +11,23 @@
 
 #include <stdio.h>
 #include <vector>
+#include <map>
 #include <random>
 
 class Process {
 protected:
     // Data
-    std::vector<double> times;
-    std::vector<std::vector<double> > values;
+    std::map<double, std::vector<double>> values;
     unsigned long dimension;
+    double lastTime;
+    std::vector<double> lastPos;
     
     // Functions
     int indexAbove(std::vector<double>, double time);
     std::vector<std::vector<double>> insert(std::vector<std::vector<double>> vec,
                                              int index,
                                              std::vector<double>);
-    std::vector<double> interpolate(std::vector<double> times,
-                                    std::vector<std::vector<double> > values,
-                                    double time);
+    std::vector<double> interpolate(double time);
 public:
     Process(std::vector<double> initial_pos);
     void setValue(double time, std::vector<double> position);

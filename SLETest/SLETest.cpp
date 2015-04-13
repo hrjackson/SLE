@@ -60,10 +60,10 @@ TEST_CASE( "SLE class tested", "[SLE]"){
     double t_end = 1;
     double tolerance = 0.1;
     double t_min = 0;
-    SLE g(&B, kappa, t_end, tolerance, t_min);
+    int numFrames = 10;
+    SLE g(&B, kappa, t_end, tolerance, t_min, numFrames);
     
     REQUIRE( g.getTimes() == g.getTimesFromZ() );
-    REQUIRE( g.getTimes().back() > t_end );
+    REQUIRE( g.getTimes().back() >= t_end );
     
 }
-

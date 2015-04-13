@@ -16,33 +16,34 @@
 
 // Initialise the process with its starting point
 Process::Process(std::vector<double> initial_pos){
-    times.push_back(0.0);
-    values.push_back(initial_pos);
+    //times.push_back(0.0);
+    values.insert( std::pair<double, std::vector<double>> (0.0, initial_pos) );
     dimension = initial_pos.size();
+    lastTime = 0;
+    lastPos = initial_pos;
 };
 
 // Set the value of the process to "position" at time "time"
 void Process::setValue(double time, std::vector<double> position){
-    auto elem = std::max_element(times.begin(), times.end());
-    if (time > *elem) {
-        times.push_back(time);
-        values.push_back(position);
-    }
-    else {
-        int index = indexAbove(times, time);
-        times.insert(times.begin()+index, time);
-        values.insert(values.begin()+index, position);
-    }
+    values.insert( std::pair<double, std::vector<double>> (time, position));
 };
 
 // Return all of the values in the process
 std::vector<std::vector<double> > Process::getValues(){
-    return values;
+    std::vector<std::vector<double>> result;
+    for (auto it = values.begin(); it != values.end(); ++it) {
+        result.push_back( it->second );
+    }
+    return result;
 };
 
 // Return all of the times in the process
 std::vector<double> Process::getTimes(){
-    return times;
+    std::vector<double> result;
+    for (auto it = values.begin(); it != values.end(); ++it) {
+        result.push_back( it->first );
+    }
+    return result;
 };
 
 
@@ -54,7 +55,7 @@ std::vector<double> Process::getTimes(){
 // Linear interpolation between defined times
 std::vector<double> StochasticProcess::operator()(double time){
     std::vector<double> val;
-    val = interpolate(times, values, time);
+    val = interpolate(time);
     return val;
 };
 
@@ -66,27 +67,34 @@ std::vector<double> StochasticProcess::operator()(double time){
 // Simulates the value of the Brownian motion at time "time"
 // Brownian bridge if "time" is in the middle of previously observed times
 std::vector<double> BrownianMotion::operator()(double time){
-    std::vector<double> val;
-    double change = 0;
+    std::vector<double> val(dimension);
+    // Deal with bounds error in messy way.
     if (time <= 0) {
-        val = values.front();
-    } else if (time > times.back()) {
-        double dt = time - times.back();
+        val = values[0];
+        return val;
+    }
+    
+    auto it = values.upper_bound(time);
+    double dx;
+    if (it == values.end() ) {
+        double dt = time - lastTime;
+        lastTime = time;
         for (int i = 0; i < dimension; i++) {
-            change = rnorm(generator)*sqrt(dt);
-            val.push_back(values.back()[i] + change);
+            dx = rnorm(generator)*sqrt(dt);
+            val[i] = lastPos[i] + dx;
         }
         setValue(time, val);
-    }
-    else {
-        int ind = indexAbove(times, time);
-        std::vector<double> interp = interpolate(times, values, time);
-        double dt = times[ind] - times[ind-1];
+        lastPos = val;
+    } else {
+        std::vector<double> interp = interpolate(time);
+        double rtime = it->first;
+        double ltime = (--it)->first;
+        double dt = rtime - ltime;
         double conditionalVariance =
-            (time - times[ind-1])*(times[ind] - time)/dt;
+        (time - ltime)*(rtime - time)/dt;
         for (int i = 0; i < dimension; i++) {
-            change = rnorm(generator)*sqrt(conditionalVariance);
-            val.push_back(interp[i] + change);
+            dx = rnorm(generator)*sqrt(conditionalVariance);
+            val[i] = interp[i] + dx;
         }
         setValue(time, val);
     }
@@ -107,18 +115,15 @@ int Process::indexAbove(std::vector<double> sortedVec, double time){
 };
 
 // Linearly interpolates between values to give approximate value at time
-std::vector<double> Process::interpolate(std::vector<double> times,
-                                std::vector<std::vector<double> > values,
-                                double time){
-    std::vector<double> val(values[0].size());
-    int ind;
-    ind = indexAbove(times, time);
-    std::vector<double> lval = values[ind-1];
-    std::vector<double> rval = values[ind];
-    double ltime = times[ind-1];
-    double rtime = times[ind];
+std::vector<double> Process::interpolate(double time){
+    std::vector<double> val(dimension);
+    auto it = values.upper_bound(time);
+    double rtime = it->first;
+    std::vector<double> rval = it->second;
+    double ltime = (--it)->first;
+    std::vector<double> lval = it->second;
     double difference = rtime - ltime;
-    for (int i = 0; i < lval.size(); i++) {
+    for (int i = 0; i < dimension; ++i) {
         val[i] = ( lval[i]*(rtime - time) + rval[i]*(time - ltime) )/difference;
     }
     return val;
