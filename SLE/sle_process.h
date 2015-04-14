@@ -18,10 +18,14 @@
 class SlitMap {
 private:
     double alpha;
+    double oneMinusAlpha;
+    double lhQuotient;
+    double rhQuotient;
     double dt;
 public:
     SlitMap(double alpha, double dt);
     std::complex<double> operator()(std::complex<double> z);
+    void update(double dt, double alpha);
     void setAlpha(double newAlpha);
     void setDt(double newDt);
 };

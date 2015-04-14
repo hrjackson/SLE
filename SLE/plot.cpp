@@ -83,10 +83,10 @@ void generateFrames(int width, int height, int scale, SLE& g){
     std::vector<double> times = g.FrameTimes();
     
     // Set up filenames
-    //std::string strForward = "./forward/";
-    std::string strReverse = "./reverseUN/";
-    //std::string frdName;
-    std::string rvsName;
+    std::string strForward = "./forward/";
+    //std::string strReverse = "./reverseUN/";
+    std::string frdName;
+    //std::string rvsName;
     std::stringstream ss;
     
     int frame = 0;
@@ -95,19 +95,19 @@ void generateFrames(int width, int height, int scale, SLE& g){
         
         ss << std::setfill('0') << std::setw(4);
         ss << frame++;
-        //frdName = strForward + ss.str() + ".png";
-        rvsName = strReverse + ss.str() + ".png";
+        frdName = strForward + ss.str() + ".png";
+        //rvsName = strReverse + ss.str() + ".png";
         ss.str(std::string());
         ss.clear();
         
         
-        //plot forward(width, height, scale);
-        plot reverse(width, height, scale);
+        plot forward(width, height, scale);
+        //plot reverse(width, height, scale);
         
-        //forward.drawSLE(g, *it);
-        reverse.drawUnCentredReverseSLE(g, *it);
+        forward.drawSLE(g, *it);
+        //reverse.drawUnCentredReverseSLE(g, *it);
         
-        //forward.output(frdName.c_str());
-        reverse.output(rvsName.c_str());
+        forward.output(frdName.c_str());
+        //reverse.output(rvsName.c_str());
     }
 }

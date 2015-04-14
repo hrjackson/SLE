@@ -15,23 +15,45 @@
 //// SlitMap member functions //////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 
-SlitMap::SlitMap(double alpha, double dt){
-    this->alpha = alpha;
-    this->dt = dt;
+SlitMap::SlitMap(double alpha, double dt)
+:alpha(alpha), dt(dt) {
+    oneMinusAlpha = 1-alpha;
+    lhQuotient = 2*powf(dt*oneMinusAlpha/alpha, 0.5f);
+    rhQuotient = 2*powf(dt*alpha/oneMinusAlpha, 0.5f);
 };
 
 std::complex<double> SlitMap::operator()(std::complex<double> z){
-    std::complex<double> lh = z + 2*sqrt(dt*(1-alpha)/alpha);
-    std::complex<double> rh = z - 2*sqrt(dt*alpha/(1-alpha));
-    return pow(lh, 1-alpha)*pow(rh, alpha);
+    // Old code:
+    //std::complex<double> lh = z + 2*sqrt(dt*(1-alpha)/alpha);
+    std::complex<double> lhQ = z + lhQuotient;
+    //std::complex<double> rh = z - 2*sqrt(dt*alpha/(1-alpha));
+    std::complex<double> rhQ = z - rhQuotient;
+    return pow(lhQ, 1-alpha)*pow(rhQ, alpha);
+    //Optimised:
+    //return pow(z + lhQuotient, oneMinusAlpha)*pow(z + rhQuotient, alpha);
 };
+
+void SlitMap::update(double dt, double alpha) {
+    this->alpha = alpha;
+    this->dt = dt;
+    oneMinusAlpha = 1-alpha;
+    //lhQuotient = 2*sqrt(dt*oneMinusAlpha/alpha);
+    //rhQuotient = 2*sqrt(dt*alpha/oneMinusAlpha);
+    lhQuotient = 2*powf(dt*oneMinusAlpha/alpha, 0.5f);
+    rhQuotient = 2*powf(dt*alpha/oneMinusAlpha, 0.5f);
+}
 
 void SlitMap::setAlpha(double newAlpha){
     alpha = newAlpha;
+    oneMinusAlpha = 1-newAlpha;
+    lhQuotient = 2*sqrt(dt*oneMinusAlpha/alpha);
+    rhQuotient = 2*sqrt(dt*alpha/oneMinusAlpha);
 }
 
 void SlitMap::setDt(double newDt){
     dt = newDt;
+    lhQuotient = 2*sqrt(dt*oneMinusAlpha/alpha);
+    rhQuotient = 2*sqrt(dt*alpha/oneMinusAlpha);
 }
 
 
@@ -68,11 +90,8 @@ void SLE::singleUpdate(double dt,
                        double& moved,
                        double& slitSize){
     double alpha = angle(t+dt, t);
-    candH.setDt(dt);
-    candH.setAlpha(alpha);
+    candH.update(dt, alpha);
     candZ = pointEval(candH(0));
-    //std::cout << "old pos = " << z[t] << std::endl;
-    //std::cout << "new pos = " << candZ << std::endl;
     moved = abs(candZ - z[t]);
     slitSize = abs( candH(0) );
 }
@@ -109,7 +128,7 @@ void SLE::adaptiveIncrement(double t_start,
     
     while (!ended) {
         // Make sure that we hit the end exactly
-        if (t+dt > t_end) {
+        if (t+dt >= t_end) {
             dt = t_end - t;
             ended = true;
         }
@@ -124,18 +143,18 @@ void SLE::adaptiveIncrement(double t_start,
                 ended = false;
             }
         }
-        
+
         // Make sure there are no rounding errors
         if (ended) {
             t = t_end;
         } else {
             t = t+dt;
         }
-        
         h.insert(std::pair<double, SlitMap>{t, candH});
         z.insert(std::pair<double, std::complex<double>>{t, candZ});
         std::cout << t << std::endl;
         
+        // Speed up if we get too slow
         if (moved < tolerance/2) {
             dt = 1.2*dt;
         }
@@ -214,8 +233,8 @@ std::complex<double> SLE::reversePoint(double start, double time, std::complex<d
 
 std::vector<std::complex<double>> SLE::forwardLine(double time){
     std::vector<std::complex<double>> result;
-    for (auto it = h.begin(); it != h.lower_bound(time); ++it) {
-        result.push_back(forwardPoint(it->first, 0));
+    for (auto it = z.begin(); it != z.upper_bound(time); ++it) {
+        result.push_back(it->second);
     }
     return result;
 }
