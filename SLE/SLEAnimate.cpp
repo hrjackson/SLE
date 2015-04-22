@@ -41,7 +41,7 @@ cv::Mat_<cpx> SLEAnimate::generateVertical() {
     
     for (int i=0; i<rows; ++i) {
         for (int j=0; j<cols; ++j) {
-            result(i,j) = heightIncrement*(double)i + widthIncrement*(double)j;
+            result(i,j) = heightIncrement*(double)i + widthIncrement*(double)j - width/2;
         }
     }
     return result;
