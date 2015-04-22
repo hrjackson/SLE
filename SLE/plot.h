@@ -21,6 +21,9 @@
 #include "sle_process.h"
 
 using namespace cv;
+using namespace std;
+
+typedef std::complex<double> cpx;
 
 class plot{
 private:
@@ -32,17 +35,24 @@ private:
     Point origin;
     Point currentPosition;
     double border;
-    Point cpxToCV (std::complex<double> z);
 public:
     plot(int width, int height, int scale, double border);
     ~plot();
-    void drawLine(std::complex<double> point, Scalar colour);
-    void drawLine(std::vector<std::complex<double>> points, Scalar colour);
+    void drawLine(cpx point, Scalar colour);
+    void drawLine(vector<cpx> points, Scalar colour);
     void drawSLE(SLE& g, double time);
     void drawReverseSLE(SLE& g, double time);
     void drawUnCentredReverseSLE(SLE& g, double time);
     void output(const char* filename);
     void show();
+    Point cpxToCV (cpx z);
+    cpx CVTocpx(Point pt);
+    // Return the min/max x or y, in complex corrdinates
+    double minX();
+    double maxX();
+    double maxY();
+    int rows();
+    int cols();
 };
 
 void generateFrames(int width, int height, int scale, SLE& g);

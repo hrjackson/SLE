@@ -12,10 +12,7 @@
 //// Plot private member function definitions //////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 
-Point plot::cpxToCV(std::complex<double> z) {
-    Point result = Point(origin.x + z.real()*scale, origin.y - z.imag()*scale);
-    return result;
-}
+
 
 ////////////////////////////////////////////////////////////////////////////////
 //// Plot member function definitions //////////////////////////////////////////
@@ -42,8 +39,8 @@ plot::plot(int width, int height, int scale, double border)
              Scalar(0,0,0),
              thickness);
     // And at +- 1
-    Point mOne = cpxToCV(std::complex<double>(-1,0));
-    Point pOne = cpxToCV(std::complex<double>(1,0));
+    Point mOne = cpxToCV(cpx(-1,0));
+    Point pOne = cpxToCV(cpx(1,0));
     cv::line(image,
              mOne,
              Point(mOne.x, (1-3.0*border/4.0)*height),
@@ -60,7 +57,7 @@ plot::~plot(){
 
 }
 
-void plot::drawLine(std::complex<double> point, Scalar colour) {
+void plot::drawLine(cpx point, Scalar colour) {
     Point endPoint = cpxToCV(point);
     line(image,
          currentPosition,
@@ -71,7 +68,7 @@ void plot::drawLine(std::complex<double> point, Scalar colour) {
     currentPosition = endPoint;
 }
 
-void plot::drawLine(std::vector<std::complex<double>> points, Scalar colour=Scalar(0,0,0)){
+void plot::drawLine(vector<cpx> points, Scalar colour=Scalar(0,0,0)){
     if (points.size() != 0){
         currentPosition = cpxToCV(points.front());
         for (auto it = ++points.begin(); it != points.end(); ++it) {
@@ -81,17 +78,17 @@ void plot::drawLine(std::vector<std::complex<double>> points, Scalar colour=Scal
 }
 
 void plot::drawSLE(SLE& g, double time){
-    std::vector<std::complex<double>> line = g.forwardLine(time);
+    vector<cpx> line = g.forwardLine(time);
     drawLine(line);
 }
 
 void plot::drawReverseSLE(SLE &g, double time){
-    std::vector<std::complex<double>> line = g.reverseLine(time);
+    vector<cpx> line = g.reverseLine(time);
     drawLine(line);
 }
 
 void plot::drawUnCentredReverseSLE(SLE &g, double time){
-    std::vector<std::complex<double>> line = g.unCentredReverseLine(time);
+    vector<cpx> line = g.unCentredReverseLine(time);
     drawLine(line);
 }
 
@@ -104,11 +101,38 @@ void plot::output(const char* filename) {
     cv::imwrite(filename, image);
 }
 
-/*
-void plot::output(const char* filename){
-    cairo_surface_write_to_png(surface, filename);
+Point plot::cpxToCV(cpx z) {
+    Point result = Point(origin.x + z.real()*scale, origin.y - z.imag()*scale);
+    return result;
 }
-*/
+
+cpx plot::CVTocpx(Point pt) {
+    cpx result = cpx( ( (double)pt.x - (double)origin.x )/scale,
+                      ( (double)origin.y - (double)pt.y )/scale );
+    return result;
+}
+
+double plot::minX(){
+    return (double)(origin.x - width)/(double)scale;
+}
+
+double plot::maxX(){
+    return -minX();
+}
+
+double plot::maxY(){
+    return (double)(origin.y)/(double)scale;
+}
+
+int plot::rows(){
+    return height;
+}
+
+int plot::cols(){
+    return width;
+}
+
+
 
 ////////////////////////////////////////////////////////////////////////////////
 //// Generate frame funcion ////////////////////////////////////////////////////
@@ -117,7 +141,7 @@ void plot::output(const char* filename){
 void generateFrames(int width, int height, int scale, SLE& g){
     
     // Get times for loop
-    std::vector<double> times = g.FrameTimes();
+    vector<double> times = g.FrameTimes();
     
     // Set up filenames
     std::string strForward = "./forward/";
