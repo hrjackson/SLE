@@ -42,7 +42,6 @@ public:
     void drawLine(vector<cpx> points, Scalar colour);
     void drawSLE(SLE& g, double time);
     void drawReverseSLE(SLE& g, double time);
-    void drawUnCentredReverseSLE(SLE& g, double time);
     void output(const char* filename);
     void show();
     Point cpxToCV (cpx z);

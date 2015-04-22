@@ -87,11 +87,6 @@ void plot::drawReverseSLE(SLE &g, double time){
     drawLine(line);
 }
 
-void plot::drawUnCentredReverseSLE(SLE &g, double time){
-    vector<cpx> line = g.unCentredReverseLine(time);
-    drawLine(line);
-}
-
 void plot::show(){
     cv::imshow("window", image);
     cv::waitKey();
@@ -131,45 +126,3 @@ int plot::rows(){
 int plot::cols(){
     return width;
 }
-
-
-
-////////////////////////////////////////////////////////////////////////////////
-//// Generate frame funcion ////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////
-/*
-void generateFrames(int width, int height, int scale, SLE& g){
-    
-    // Get times for loop
-    vector<double> times = g.FrameTimes();
-    
-    // Set up filenames
-    std::string strForward = "./forward/";
-    //std::string strReverse = "./reverseUN/";
-    std::string frdName;
-    //std::string rvsName;
-    std::stringstream ss;
-    
-    int frame = 0;
-    
-    for (auto it = times.begin(); it != times.end(); ++it) {
-        
-        ss << std::setfill('0') << std::setw(4);
-        ss << frame++;
-        frdName = strForward + ss.str() + ".png";
-        //rvsName = strReverse + ss.str() + ".png";
-        ss.str(std::string());
-        ss.clear();
-        
-        
-        plot forward(width, height, scale);
-        //plot reverse(width, height, scale);
-        
-        forward.drawSLE(g, *it);
-        //reverse.drawUnCentredReverseSLE(g, *it);
-        
-        forward.output(frdName.c_str());
-        //reverse.output(rvsName.c_str());
-    }
-}
-*/
