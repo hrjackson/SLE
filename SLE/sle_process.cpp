@@ -136,10 +136,12 @@ void SLE::adaptiveIncrement(double t_start,
         // Adaptive loop
         while (true) {
             singleUpdate(dt, t, candH, candZ, moved, slitSize);
-            if ( (moved < tolerance) && (slitSize < 2*tolerance) ) {
+            //if ( (moved < tolerance) && (slitSize < 2*tolerance) ) {
+            if ( (moved < tolerance) || dt < dtMin) {
                 break;
             } else {
-                dt = std::max(0.8*dt, dtMin);
+                dt = 0.8*dt;
+                //dt = std::max(0.8*dt, dtMin);
                 ended = false;
             }
         }
@@ -152,7 +154,7 @@ void SLE::adaptiveIncrement(double t_start,
         }
         h.insert(std::pair<double, SlitMap>{t, candH});
         z.insert(std::pair<double, std::complex<double>>{t, candZ});
-        std::cout << t << std::endl;
+        std::cout << t << std::fixed << std::endl;
         
         // Speed up if we get too slow
         if (moved < tolerance/2) {

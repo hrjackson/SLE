@@ -9,48 +9,74 @@
 #include "plot.h"
 
 ////////////////////////////////////////////////////////////////////////////////
+//// Plot private member function definitions //////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+
+Point plot::cpxToCV(std::complex<double> z) {
+    Point result = Point(origin.x + z.real()*scale, origin.y - z.imag()*scale);
+    return result;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 //// Plot member function definitions //////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 
-plot::plot(int width, int height, int scale)
-:width(width), height(height), scale(scale){
-    originRe = (double)(width)/(double)(2*scale);
-    originIm = 0.95*(double)(height)/(double)(scale);
-    surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, width, height);
-    cr = cairo_create(surface);
-    cairo_scale (cr, scale, scale);
-    cairo_set_line_join(cr, CAIRO_LINE_JOIN_ROUND);
+plot::plot(int width, int height, int scale, double border)
+:width(width), height(height), scale(scale), border(border) {
+    origin = Point(width/2, (1-border)*(double)height);
+    int thickness = 2;
     
-    // Make the background white
-    cairo_rectangle(cr, 0, 0, (double)(width)/scale, (double)(height)/scale);
-    cairo_set_source_rgb(cr, 1, 1, 1);
-    cairo_fill(cr);
+    // Initialise the plot
+    image =  Mat::Mat(height, width, CV_8UC3, Scalar(255,255,255));
     
     // Draw the real axis
-    cairo_set_source_rgb(cr, 0, 0, 0);
-    cairo_set_line_width(cr, 0.005);
-    cairo_move_to(cr, 0.05*originRe, originIm);
-    cairo_line_to(cr, 1.95*originRe, originIm);
-    cairo_move_to(cr, originRe, originIm);
-    cairo_line_to(cr, originRe, 1.01*originIm);
-    cairo_stroke(cr);
+    cv::line(image,
+             Point( border*width, (1-border)*height ),
+             Point( (1-border)*width, (1-border)* height),
+             Scalar(0,0,0),
+             thickness);
+    // And the little mark at the origin
+    cv::line(image,
+             origin,
+             Point(width/2, (1-2.0*border/3.0)*(double)height),
+             Scalar(0,0,0),
+             thickness);
+    // And at +- 1
+    Point mOne = cpxToCV(std::complex<double>(-1,0));
+    Point pOne = cpxToCV(std::complex<double>(1,0));
+    cv::line(image,
+             mOne,
+             Point(mOne.x, (1-3.0*border/4.0)*height),
+             Scalar(0,0,0),
+             thickness);
+    cv::line(image,
+             pOne,
+             Point(pOne.x, (1-3.0*border/4.0)*height),
+             Scalar(0,0,0),
+             thickness);
 }
 
 plot::~plot(){
-    cairo_destroy(cr);
-    cairo_surface_destroy(surface);
+
 }
 
-void plot::drawLine(std::vector<std::complex<double>> points){
+void plot::drawLine(std::complex<double> point, Scalar colour) {
+    Point endPoint = cpxToCV(point);
+    line(image,
+         currentPosition,
+         endPoint,
+         colour,
+         1,
+         CV_AA);
+    currentPosition = endPoint;
+}
+
+void plot::drawLine(std::vector<std::complex<double>> points, Scalar colour=Scalar(0,0,0)){
     if (points.size() != 0){
-        cairo_set_source_rgb(cr, 0, 0, 0);
-        cairo_set_line_width (cr, 0.002);
-        std::complex<double> start = points.front();
-        cairo_move_to(cr, start.real() + originRe, originIm - start.imag());
+        currentPosition = cpxToCV(points.front());
         for (auto it = ++points.begin(); it != points.end(); ++it) {
-            cairo_line_to(cr, (*it).real() + originRe, originIm - (*it).imag());
+            drawLine((*it), colour);
         }
-        cairo_stroke(cr);
     }
 }
 
@@ -69,14 +95,25 @@ void plot::drawUnCentredReverseSLE(SLE &g, double time){
     drawLine(line);
 }
 
+void plot::show(){
+    cv::imshow("window", image);
+    cv::waitKey();
+}
+
+void plot::output(const char* filename) {
+    cv::imwrite(filename, image);
+}
+
+/*
 void plot::output(const char* filename){
     cairo_surface_write_to_png(surface, filename);
 }
+*/
 
 ////////////////////////////////////////////////////////////////////////////////
 //// Generate frame funcion ////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
-
+/*
 void generateFrames(int width, int height, int scale, SLE& g){
     
     // Get times for loop
@@ -111,3 +148,4 @@ void generateFrames(int width, int height, int scale, SLE& g){
         //reverse.output(rvsName.c_str());
     }
 }
+*/

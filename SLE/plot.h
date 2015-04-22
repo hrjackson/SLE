@@ -16,26 +16,33 @@
 #include <sstream>
 #include <iomanip>
 
-#include "cairo.h"
+#include <opencv2/core/core.hpp>
+#include <opencv2/highgui/highgui.hpp>
 #include "sle_process.h"
+
+using namespace cv;
 
 class plot{
 private:
+    Mat image;
     int width;
     int height;
     int scale;
-    double originRe;
-    double originIm;
-    cairo_surface_t *surface;
-    cairo_t *cr;
+    // origin is in matrix coords in matrix coordinates
+    Point origin;
+    Point currentPosition;
+    double border;
+    Point cpxToCV (std::complex<double> z);
 public:
-    plot(int width, int height, int scale);
+    plot(int width, int height, int scale, double border);
     ~plot();
-    void drawLine(std::vector<std::complex<double>> points);
+    void drawLine(std::complex<double> point, Scalar colour);
+    void drawLine(std::vector<std::complex<double>> points, Scalar colour);
     void drawSLE(SLE& g, double time);
     void drawReverseSLE(SLE& g, double time);
     void drawUnCentredReverseSLE(SLE& g, double time);
     void output(const char* filename);
+    void show();
 };
 
 void generateFrames(int width, int height, int scale, SLE& g);

@@ -10,22 +10,22 @@
 #include <vector>
 #include <complex>
 
-#include "cairo.h"
 #include "stochastic_processes.h"
 #include "sle_process.h"
 #include "plot.h"
 
 int main(int argc, const char * argv[]) {
     // Parameters
-    double kappa = 2;
+    double kappa = 6;
     double t_end = 1.0;
-    double tolerance = 0.01;
-    double dtMin = 0;
+    double tolerance = 0.005;
+    double dtMin = 0.0000000000001;
     int numFrames = 10;
     
-    int width = 1920;
-    int height = 1080;
-    int scale = 500;
+    int width = 2880;
+    int height = 1800;
+    int scale = height/2;
+    double border = 0.03;
     
     
     // Start
@@ -36,9 +36,15 @@ int main(int argc, const char * argv[]) {
     std::vector<double> end(1, 0.2);
     BrownianMotion B(init, generator);
     
+    std::cout.precision(40);
+    
     SLE g(&B, kappa, t_end, tolerance, dtMin, numFrames);
     
-    generateFrames(width, height, scale, g);
+    plot pl(width, height, scale, border);
+    pl.drawSLE(g, 1.0);
+    //pl.show();
+    pl.output("output.jpg");
+    //generateFrames(width, height, scale, g);
     
     
     return 0;
