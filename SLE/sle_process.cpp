@@ -18,8 +18,8 @@
 SlitMap::SlitMap(double alpha, double dt)
 :alpha(alpha), dt(dt) {
     oneMinusAlpha = 1-alpha;
-    lhQuotient = 2*powf(dt*oneMinusAlpha/alpha, 0.5f);
-    rhQuotient = 2*powf(dt*alpha/oneMinusAlpha, 0.5f);
+    lhQuotient = 2*sqrt(dt*oneMinusAlpha/alpha);
+    rhQuotient = 2*sqrt(dt*alpha/oneMinusAlpha);
 };
 
 std::complex<double> SlitMap::operator()(std::complex<double> z){
@@ -33,14 +33,12 @@ std::complex<double> SlitMap::operator()(std::complex<double> z){
     //return pow(z + lhQuotient, oneMinusAlpha)*pow(z + rhQuotient, alpha);
 };
 
-void SlitMap::update(double dt, double alpha) {
+void SlitMap::update(double dt, double alpha){
     this->alpha = alpha;
     this->dt = dt;
     oneMinusAlpha = 1-alpha;
-    //lhQuotient = 2*sqrt(dt*oneMinusAlpha/alpha);
-    //rhQuotient = 2*sqrt(dt*alpha/oneMinusAlpha);
-    lhQuotient = 2*powf(dt*oneMinusAlpha/alpha, 0.5f);
-    rhQuotient = 2*powf(dt*alpha/oneMinusAlpha, 0.5f);
+    lhQuotient = 2*sqrt(dt*oneMinusAlpha/alpha);
+    rhQuotient = 2*sqrt(dt*alpha/oneMinusAlpha);
 }
 
 void SlitMap::setAlpha(double newAlpha){
@@ -249,21 +247,3 @@ std::vector<std::complex<double>> SLE::reverseLine(double time){
     }
     return result;
 }
-
-std::vector<std::complex<double>> SLE::unCentredReverseLine(double time){
-    std::vector<std::complex<double>> result;
-    double t_end = h.rbegin()->first;
-    std::complex<double> point;
-    double offset = (*b)(t_end - time)[0];
-    for (auto it = h.lower_bound(t_end - time); it!=h.end(); ++it) {
-        point = reversePoint(t_end - time, it->first, 0);
-        point += offset;
-        result.push_back(point);
-    }
-    return result;
-}
-
-
-
-
-

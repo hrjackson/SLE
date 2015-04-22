@@ -119,9 +119,9 @@
 				BA9994AA1AB9B52700B06152 /* stochastic_processes.cpp */,
 				BA9994AB1AB9B52700B06152 /* stochastic_processes.h */,
 				BA87FDD61ABC5903008DFF30 /* sle_process.cpp */,
+				BA87FDD71ABC5903008DFF30 /* sle_process.h */,
 				BAD952491AE8190B00B47D45 /* SLEAnimate.cpp */,
 				BAD9524A1AE8190B00B47D45 /* SLEAnimate.h */,
-				BA87FDD71ABC5903008DFF30 /* sle_process.h */,
 			);
 			path = SLE;
 			sourceTree = "<group>";

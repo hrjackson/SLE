@@ -74,10 +74,6 @@ public:
     std::complex<double> reversePoint(double start, double time, std::complex<double> z);
     std::vector<std::complex<double>> forwardLine(double time);
     std::vector<std::complex<double>> reverseLine(double time);
-    std::vector<std::complex<double>> unCentredReverseLine(double time);
 };
-
-
-
 
 #endif /* defined(__SLE__sle_process__) */
