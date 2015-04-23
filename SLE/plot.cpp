@@ -21,36 +21,11 @@
 plot::plot(int width, int height, int scale, double border)
 :width(width), height(height), scale(scale), border(border) {
     origin = Point(width/2, (1-border)*(double)height);
-    int thickness = 2;
     
     // Initialise the plot
     image =  Mat::Mat(height, width, CV_8UC3, Scalar(255,255,255));
     
-    // Draw the real axis
-    cv::line(image,
-             Point( border*width, (1-border)*height ),
-             Point( (1-border)*width, (1-border)* height),
-             Scalar(0,0,0),
-             thickness);
-    // And the little mark at the origin
-    cv::line(image,
-             origin,
-             Point(width/2, (1-2.0*border/3.0)*(double)height),
-             Scalar(0,0,0),
-             thickness);
-    // And at +- 1
-    Point mOne = cpxToCV(cpx(-1,0));
-    Point pOne = cpxToCV(cpx(1,0));
-    cv::line(image,
-             mOne,
-             Point(mOne.x, (1-3.0*border/4.0)*height),
-             Scalar(0,0,0),
-             thickness);
-    cv::line(image,
-             pOne,
-             Point(pOne.x, (1-3.0*border/4.0)*height),
-             Scalar(0,0,0),
-             thickness);
+    drawAxis();
 }
 
 plot::~plot(){
@@ -77,19 +52,38 @@ void plot::drawLine(vector<cpx> points, Scalar colour=Scalar(0,0,0)){
     }
 }
 
-void plot::drawSLE(SLE& g, double time){
-    vector<cpx> line = g.forwardLine(time);
-    drawLine(line);
-}
-
-void plot::drawReverseSLE(SLE &g, double time){
-    vector<cpx> line = g.reverseLine(time);
-    drawLine(line);
-}
-
 void plot::show(){
     cv::imshow("window", image);
     cv::waitKey();
+}
+
+void plot::drawAxis() {
+    int thickness = 2;
+    // Draw the real axis
+    cv::line(image,
+             Point( border*width, (1-border)*height ),
+             Point( (1-border)*width, (1-border)* height),
+             Scalar(0,0,0),
+             thickness);
+    // And the little mark at the origin
+    cv::line(image,
+             origin,
+             Point(width/2, (1-2.0*border/3.0)*(double)height),
+             Scalar(0,0,0),
+             thickness);
+    // And at +- 1
+    Point mOne = cpxToCV(cpx(-1,0));
+    Point pOne = cpxToCV(cpx(1,0));
+    cv::line(image,
+             mOne,
+             Point(mOne.x, (1-3.0*border/4.0)*height),
+             Scalar(0,0,0),
+             thickness);
+    cv::line(image,
+             pOne,
+             Point(pOne.x, (1-3.0*border/4.0)*height),
+             Scalar(0,0,0),
+             thickness);
 }
 
 void plot::output(const char* filename) {

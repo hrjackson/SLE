@@ -7,17 +7,17 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		BA1463C71AE9252C0001E0A0 /* stochastic_processes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BA9994AA1AB9B52700B06152 /* stochastic_processes.cpp */; };
+		BA1463C81AE9252D0001E0A0 /* stochastic_processes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BA9994AA1AB9B52700B06152 /* stochastic_processes.cpp */; };
+		BA1463C91AE9253C0001E0A0 /* sle_process.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BA87FDD61ABC5903008DFF30 /* sle_process.cpp */; };
+		BA1463CA1AE9253D0001E0A0 /* sle_process.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BA87FDD61ABC5903008DFF30 /* sle_process.cpp */; };
+		BA1463CB1AE92A200001E0A0 /* SLEAnimate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BAD952491AE8190B00B47D45 /* SLEAnimate.cpp */; };
+		BA1463CC1AE92A230001E0A0 /* SLEAnimate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BAD952491AE8190B00B47D45 /* SLEAnimate.cpp */; };
 		BA328A131ABAF67500BD56DA /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BA328A121ABAF67500BD56DA /* main.cpp */; };
 		BA328A1A1ABAF94800BD56DA /* ProcessTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BA328A181ABAF94800BD56DA /* ProcessTest.cpp */; };
-		BA328A1B1ABAFF7800BD56DA /* stochastic_processes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BA9994AA1AB9B52700B06152 /* stochastic_processes.cpp */; };
-		BA87FDD81ABC5903008DFF30 /* sle_process.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BA87FDD61ABC5903008DFF30 /* sle_process.cpp */; };
-		BA87FDD91ABC5903008DFF30 /* sle_process.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BA87FDD61ABC5903008DFF30 /* sle_process.cpp */; };
 		BA8911DB1AC88A0300E98779 /* plot.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BA8911D91AC88A0300E98779 /* plot.cpp */; };
 		BA89C19E1A8A579100465451 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BA89C19D1A8A579100465451 /* main.cpp */; };
-		BA9994AC1AB9B52700B06152 /* stochastic_processes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BA9994AA1AB9B52700B06152 /* stochastic_processes.cpp */; };
 		BAA910CC1AC07934000B8DFE /* SLETest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BAA910CB1AC07934000B8DFE /* SLETest.cpp */; };
-		BAD9524B1AE8190B00B47D45 /* SLEAnimate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BAD952491AE8190B00B47D45 /* SLEAnimate.cpp */; };
-		BAD9524C1AE8190B00B47D45 /* SLEAnimate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BAD952491AE8190B00B47D45 /* SLEAnimate.cpp */; };
 		BAD9524E1AE834BF00B47D45 /* SLEAnimateTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BAD9524D1AE834BF00B47D45 /* SLEAnimateTest.cpp */; };
 		BAD9524F1AE8388C00B47D45 /* plot.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BA8911D91AC88A0300E98779 /* plot.cpp */; };
 /* End PBXBuildFile section */
@@ -205,11 +205,11 @@
 			files = (
 				BAD9524F1AE8388C00B47D45 /* plot.cpp in Sources */,
 				BA328A131ABAF67500BD56DA /* main.cpp in Sources */,
-				BA328A1B1ABAFF7800BD56DA /* stochastic_processes.cpp in Sources */,
-				BA87FDD91ABC5903008DFF30 /* sle_process.cpp in Sources */,
+				BA1463CC1AE92A230001E0A0 /* SLEAnimate.cpp in Sources */,
 				BAA910CC1AC07934000B8DFE /* SLETest.cpp in Sources */,
-				BAD9524C1AE8190B00B47D45 /* SLEAnimate.cpp in Sources */,
 				BAD9524E1AE834BF00B47D45 /* SLEAnimateTest.cpp in Sources */,
+				BA1463C81AE9252D0001E0A0 /* stochastic_processes.cpp in Sources */,
+				BA1463CA1AE9253D0001E0A0 /* sle_process.cpp in Sources */,
 				BA328A1A1ABAF94800BD56DA /* ProcessTest.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -218,11 +218,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BA87FDD81ABC5903008DFF30 /* sle_process.cpp in Sources */,
-				BA9994AC1AB9B52700B06152 /* stochastic_processes.cpp in Sources */,
 				BA8911DB1AC88A0300E98779 /* plot.cpp in Sources */,
+				BA1463C71AE9252C0001E0A0 /* stochastic_processes.cpp in Sources */,
+				BA1463C91AE9253C0001E0A0 /* sle_process.cpp in Sources */,
 				BA89C19E1A8A579100465451 /* main.cpp in Sources */,
-				BAD9524B1AE8190B00B47D45 /* SLEAnimate.cpp in Sources */,
+				BA1463CB1AE92A200001E0A0 /* SLEAnimate.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

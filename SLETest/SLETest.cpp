@@ -26,6 +26,16 @@ TEST_CASE( "SlitMap class tested", "[SlitMap]"){
         REQUIRE( abs(id(zero) - zero) < eps );
     }
     
+    SECTION( "Testing Inverse" ){
+        REQUIRE( abs(h(h.inverse(z)) - z) < 0.0001);
+        REQUIRE( abs(h(h.inverse(w)) - w) < 0.0001);
+        REQUIRE( abs(h(h.inverse(zero)) - zero) < 0.0001);
+        
+        REQUIRE( abs(h.inverse(h(z)) - z) < 0.0001);
+        REQUIRE( abs(h.inverse(h(w)) - w) < 0.0001);
+        REQUIRE( abs(h.inverse(h(zero)) - zero) < 0.0001);
+    }
+    
     SECTION( "Testing general map by hand"){
         std::complex<double> lh;
         std::complex<double> rh;

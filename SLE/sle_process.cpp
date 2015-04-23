@@ -11,16 +11,38 @@
 #include <iostream>
 #include <algorithm>
 
-////////////////////////////////////////////////////////////////////////////////
+
+/*//////////////////////////////////////////////////////////////////////////////
+//// SlitMap private member functions //////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////*/
+
+std::complex<double> SlitMap::derivative(std::complex<double> z) {
+    std::complex<double> lhQ = z + lhQuotient;
+    std::complex<double> rhQ = z - rhQuotient;
+    return (1 - alpha + lhQ/rhQ)*pow(rhQ/lhQ, alpha);
+}
+
+/*//////////////////////////////////////////////////////////////////////////////
 //// SlitMap member functions //////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////*/
 
 SlitMap::SlitMap(double alpha, double dt)
 :alpha(alpha), dt(dt) {
     oneMinusAlpha = 1-alpha;
     lhQuotient = 2*sqrt(dt*oneMinusAlpha/alpha);
     rhQuotient = 2*sqrt(dt*alpha/oneMinusAlpha);
+    tol = 0.001;
 };
+
+SlitMap::SlitMap(){
+    alpha = 0.5;
+    dt = 0.5;
+    oneMinusAlpha = 0.5;
+    lhQuotient = 1;
+    rhQuotient = 1;
+    tol = 0.01;
+    std::cout << "REALLY shouldn't be needing the default constructor!" << std::endl;
+}
 
 std::complex<double> SlitMap::operator()(std::complex<double> z){
     // Old code:
@@ -31,7 +53,20 @@ std::complex<double> SlitMap::operator()(std::complex<double> z){
     return pow(lhQ, 1-alpha)*pow(rhQ, alpha);
     //Optimised:
     //return pow(z + lhQuotient, oneMinusAlpha)*pow(z + rhQuotient, alpha);
-};
+}
+
+// Simple Newton-Raphson calculation. 
+std::complex<double> SlitMap::inverse(std::complex<double> w){
+    std::complex<double> z(0,5);
+    std::complex<double> image = this->operator()(z);
+    int i = 0;
+    while ( (abs(image - w) > tol) && i < 100 ) {
+        z = z - (image - w)/derivative(z);
+        image = this->operator()(z);
+        ++i;
+    }
+    return z;
+}
 
 void SlitMap::update(double dt, double alpha){
     this->alpha = alpha;
@@ -52,6 +87,14 @@ void SlitMap::setDt(double newDt){
     dt = newDt;
     lhQuotient = 2*sqrt(dt*oneMinusAlpha/alpha);
     rhQuotient = 2*sqrt(dt*alpha/oneMinusAlpha);
+}
+
+double SlitMap::getAlpha(){
+    return alpha;
+}
+
+double SlitMap::getDt(){
+    return dt;
 }
 
 
@@ -192,8 +235,24 @@ std::vector<double> SLE::getTimes(){
     return result;
 }
 
+std::set<double> SLE::getOrderedTimes(){
+    std::set<double> result;
+    for (auto it = h.begin(); it!=h.end(); it++) {
+        result.insert(it->first);
+    }
+    return result;
+}
+
 std::vector<double> SLE::FrameTimes(){
     return admissibleTimes;
+}
+
+std::set<double> SLE::orderedFrameTimes(){
+    std::set<double> result;
+    for (auto it = admissibleTimes.begin(); it != admissibleTimes.end(); ++it) {
+        result.insert(*it);
+    }
+    return result;
 }
 
 std::vector<double> SLE::getTimesFromZ(){
@@ -232,8 +291,12 @@ std::complex<double> SLE::reversePoint(double start, double time, std::complex<d
 }
 
 std::vector<std::complex<double>> SLE::forwardLine(double time){
+    return forwardLine(0.0, time);
+}
+
+std::vector<std::complex<double>> SLE::forwardLine(double tStart, double tEnd){
     std::vector<std::complex<double>> result;
-    for (auto it = z.begin(); it != z.upper_bound(time); ++it) {
+    for (auto it = z.lower_bound(tStart); it != z.upper_bound(tEnd); ++it) {
         result.push_back(it->second);
     }
     return result;
@@ -246,4 +309,16 @@ std::vector<std::complex<double>> SLE::reverseLine(double time){
         result.push_back(reversePoint(t_end - time, it->first, 0));
     }
     return result;
+}
+
+SlitMap SLE::slitMap(double time) {
+    double alpha = h[time].getAlpha();
+    double dt = h[time].getDt();
+    SlitMap result(alpha, dt);
+    //SlitMap result(0.3, 0.5);
+    return result;
+}
+
+double SLE::drivingFunction(double time) {
+    return (*b)(time)[0];
 }

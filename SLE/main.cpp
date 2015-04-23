@@ -9,16 +9,18 @@
 #include <iostream>
 #include <vector>
 #include <complex>
+#include <random>
 
 #include "stochastic_processes.h"
 #include "sle_process.h"
 #include "plot.h"
+#include "SLEAnimate.h"
 
 int main(int argc, const char * argv[]) {
     // Parameters
-    double kappa = 6;
+    double kappa = 2;
     double t_end = 1.0;
-    double tolerance = 0.005;
+    double tolerance = 0.1;
     double dtMin = 0.0000000000001;
     int numFrames = 10;
     
@@ -26,6 +28,9 @@ int main(int argc, const char * argv[]) {
     int height = 1800;
     int scale = height/2;
     double border = 0.03;
+    
+    double gridRes = 0.1;
+    double gridSpacing = 0.5;
     
     
     // Start
@@ -36,16 +41,24 @@ int main(int argc, const char * argv[]) {
     std::vector<double> end(1, 0.2);
     BrownianMotion B(init, generator);
     
-    std::cout.precision(40);
+    std::cout.precision(4);
     
     SLE g(&B, kappa, t_end, tolerance, dtMin, numFrames);
     
-    plot pl(width, height, scale, border);
-    pl.drawSLE(g, 1.0);
-    //pl.show();
-    pl.output("output.jpg");
-    //generateFrames(width, height, scale, g);
+    plot plotLeft(width, height, scale, border);
+    plot plotRight(width, height, scale, border);
     
+    std::cout << "Just about to initialise the animation object" << std::endl;
+    SLEAnimate sa(gridRes, gridSpacing, g, plotLeft, plotRight);
+    std::cout<< "finished that" << std::endl;
+    
+    for (int i=0; i < numFrames/2; ++i) {
+        std::cout << "Frame " << i << std::endl;
+        sa.nextFrame();
+    }
+    
+    sa.show();
+    cv::waitKey();
     
     return 0;
 }

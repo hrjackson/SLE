@@ -18,7 +18,6 @@
 
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
-#include "sle_process.h"
 
 using namespace cv;
 using namespace std;
@@ -40,10 +39,9 @@ public:
     ~plot();
     void drawLine(cpx point, Scalar colour);
     void drawLine(vector<cpx> points, Scalar colour);
-    void drawSLE(SLE& g, double time);
-    void drawReverseSLE(SLE& g, double time);
     void output(const char* filename);
     void show();
+    void drawAxis();
     Point cpxToCV (cpx z);
     cpx CVTocpx(Point pt);
     // Return the min/max x or y, in complex corrdinates
@@ -53,7 +51,5 @@ public:
     int rows();
     int cols();
 };
-
-void generateFrames(int width, int height, int scale, SLE& g);
 
 #endif /* defined(__SLE__plot__) */

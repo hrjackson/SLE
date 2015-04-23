@@ -11,6 +11,7 @@
 
 #include <stdio.h>
 #include <vector>
+#include <set>
 #include <complex>
 #include <map>
 #include "stochastic_processes.h"
@@ -22,12 +23,18 @@ private:
     double lhQuotient;
     double rhQuotient;
     double dt;
+    double tol;
+    std::complex<double> derivative(std::complex<double> z);
 public:
     SlitMap(double alpha, double dt);
+    SlitMap();
     std::complex<double> operator()(std::complex<double> z);
+    std::complex<double> inverse(std::complex<double> w);
     void update(double dt, double alpha);
     void setAlpha(double newAlpha);
     void setDt(double newDt);
+    double getAlpha();
+    double getDt();
 };
 
 
@@ -67,13 +74,18 @@ public:
         int numFrames);
     double operator()(double time, std::vector<double> point);
     std::vector<double> getTimes();
+    std::set<double> getOrderedTimes();
     std::vector<double> FrameTimes();
+    std::set<double> orderedFrameTimes();
     std::vector<double> getTimesFromZ();
     std::vector<std::complex<double>> getCurve();
     std::complex<double> forwardPoint(double time, std::complex<double> z);
     std::complex<double> reversePoint(double start, double time, std::complex<double> z);
     std::vector<std::complex<double>> forwardLine(double time);
+    std::vector<std::complex<double>> forwardLine(double tStart, double tEnd);
     std::vector<std::complex<double>> reverseLine(double time);
+    SlitMap slitMap(double time);
+    double drivingFunction(double time);
 };
 
 #endif /* defined(__SLE__sle_process__) */
