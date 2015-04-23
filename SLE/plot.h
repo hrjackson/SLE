@@ -41,6 +41,7 @@ public:
     void drawLine(vector<cpx> points, Scalar colour);
     void output(const char* filename);
     void show();
+    void clear();
     void drawAxis();
     Point cpxToCV (cpx z);
     cpx CVTocpx(Point pt);

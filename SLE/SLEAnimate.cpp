@@ -90,14 +90,14 @@ void SLEAnimate::timeUpdate(double time){
     updateMatrixForward(h, offset, horizontal);
     updateMatrixForward(h, offset, vertical);
     // And the pixels, in the reverse direction
-    updateMatrixReverse(h, offset, pixelPos);
+    //updateMatrixReverse(h, offset, pixelPos);
 }
 
 void SLEAnimate::updateMatrixForward(SlitMap& h,
                                      double offset,
                                      cv::Mat_<cpx>& matrix){
     for (auto it = matrix.begin(); it != matrix.end(); ++it) {
-        cpx pt = *it;
+        //cpx pt = *it;
         //cout << pt << endl;
         *it = h.inverse((*it) + offset);
     }
@@ -113,14 +113,16 @@ void SLEAnimate::updateMatrixReverse(SlitMap& h,
 
 
 void SLEAnimate::plot() {
+    rightPlot.clear();
     drawLines(rightPlot, horizontal);
     cv::Mat_<cpx> tmp = vertical.t();
     drawLines(rightPlot, tmp);
     if (currentTime > 0) {
         leftPlot.drawLine(g.forwardLine( *(--frameTimes.lower_bound(currentTime)),
                                         currentTime),
-                          Scalar(0,0,0));
+                          Scalar(255,0,0));
     }
+    rightPlot.drawAxis();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -136,13 +138,13 @@ SLEAnimate::SLEAnimate(double gridRes,
 g(g), leftPlot(left), rightPlot(right) {
     // Initialise the line matrices
     horizontal = generateHorizontal();
-    cout << "The horizontal matrix:" << endl;
-    cout << horizontal << endl;
+    //cout << "The horizontal matrix:" << endl;
+    //cout << horizontal << endl;
     hzOriginalPos = horizontal;
     hzCut = Mat_<bool>(horizontal.rows, horizontal.cols);
     vertical = generateVertical();
-    cout << "The vertical matrix:" << endl;
-    cout << vertical << endl;
+    //cout << "The vertical matrix:" << endl;
+    //cout << vertical << endl;
     vtOriginalPos = vertical;
     // Initialise the pixel matrix
     pixelPos = generatePixelPos();
@@ -160,6 +162,7 @@ bool SLEAnimate::nextFrame() {
         for (auto it = times.upper_bound(currentTime); *it <= nextTime; ++it) {
             timeUpdate(*it);
         }
+        currentTime = nextTime;
         plot();
         return true;
     }
@@ -174,7 +177,10 @@ void SLEAnimate::show() {
     rightPlot.show();
 }
 
-
+void SLEAnimate::output() {
+    leftPlot.output("left.jpg");
+    rightPlot.output("right.jpg");
+}
 
 
 

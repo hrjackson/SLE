@@ -57,6 +57,10 @@ void plot::show(){
     cv::waitKey();
 }
 
+void plot::clear(){
+    image = Scalar(255,255,255);
+}
+
 void plot::drawAxis() {
     int thickness = 2;
     // Draw the real axis

@@ -59,6 +59,7 @@ public:
                class plot& left, class plot& right);
     bool nextFrame();
     void show();
+    void output();
 };
 
 #endif /* defined(__SLE__SLEAnimate__) */

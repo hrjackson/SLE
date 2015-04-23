@@ -18,19 +18,19 @@
 
 int main(int argc, const char * argv[]) {
     // Parameters
-    double kappa = 2;
+    double kappa = 3;
     double t_end = 1.0;
-    double tolerance = 0.1;
+    double tolerance = 0.01;
     double dtMin = 0.0000000000001;
     int numFrames = 10;
     
-    int width = 2880;
-    int height = 1800;
+    int width = 800;
+    int height = 400;
     int scale = height/2;
     double border = 0.03;
     
-    double gridRes = 0.1;
-    double gridSpacing = 0.5;
+    double gridRes = 0.005;
+    double gridSpacing = 0.2;
     
     
     // Start
@@ -52,12 +52,13 @@ int main(int argc, const char * argv[]) {
     SLEAnimate sa(gridRes, gridSpacing, g, plotLeft, plotRight);
     std::cout<< "finished that" << std::endl;
     
-    for (int i=0; i < numFrames/2; ++i) {
+    for (int i=0; i < 1; ++i) {
         std::cout << "Frame " << i << std::endl;
         sa.nextFrame();
     }
     
     sa.show();
+    sa.output();
     cv::waitKey();
     
     return 0;

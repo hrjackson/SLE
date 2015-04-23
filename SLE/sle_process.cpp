@@ -31,7 +31,7 @@ SlitMap::SlitMap(double alpha, double dt)
     oneMinusAlpha = 1-alpha;
     lhQuotient = 2*sqrt(dt*oneMinusAlpha/alpha);
     rhQuotient = 2*sqrt(dt*alpha/oneMinusAlpha);
-    tol = 0.001;
+    tol = 0.0000001;
 };
 
 SlitMap::SlitMap(){
@@ -40,7 +40,7 @@ SlitMap::SlitMap(){
     oneMinusAlpha = 0.5;
     lhQuotient = 1;
     rhQuotient = 1;
-    tol = 0.01;
+    tol = 0.000001;
     std::cout << "REALLY shouldn't be needing the default constructor!" << std::endl;
 }
 
@@ -60,7 +60,7 @@ std::complex<double> SlitMap::inverse(std::complex<double> w){
     std::complex<double> z(0,5);
     std::complex<double> image = this->operator()(z);
     int i = 0;
-    while ( (abs(image - w) > tol) && i < 100 ) {
+    while ( (abs(image - w) > tol) && i < 1000 ) {
         z = z - (image - w)/derivative(z);
         image = this->operator()(z);
         ++i;
@@ -320,5 +320,5 @@ SlitMap SLE::slitMap(double time) {
 }
 
 double SLE::drivingFunction(double time) {
-    return (*b)(time)[0];
+    return (*b)(time)[0]*sqrt(kappa);
 }
