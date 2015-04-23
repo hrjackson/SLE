@@ -31,6 +31,7 @@ public:
     std::complex<double> operator()(std::complex<double> z);
     std::complex<double> inverse(std::complex<double> w);
     void update(double dt, double alpha);
+    void update(double dt, double t, BrownianMotion* b);
     void setAlpha(double newAlpha);
     void setDt(double newDt);
     double getAlpha();

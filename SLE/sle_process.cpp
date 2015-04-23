@@ -130,8 +130,9 @@ void SLE::singleUpdate(double dt,
                        std::complex<double>& candZ,
                        double& moved,
                        double& slitSize){
-    double alpha = angle(t+dt, t);
-    candH.update(dt, alpha);
+    //double alpha = angle(t+dt, t);
+    //candH.update(dt, alpha);
+    candH.update(dt, t, b);
     candZ = pointEval(candH(0));
     moved = abs(candZ - z[t]);
     slitSize = abs( candH(0) );
