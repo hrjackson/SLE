@@ -11,7 +11,7 @@
 #include "sle_process.h"
 
 TEST_CASE( "SlitMap class tested", "[SlitMap]"){
-    SlitMap id(0.5, 0);
+    SlitMap id(0, 0);
     double dt = 0.1;
     double alpha = 0.4;
     SlitMap h(alpha, dt);

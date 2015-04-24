@@ -18,9 +18,9 @@
 
 int main(int argc, const char * argv[]) {
     // Parameters
-    double kappa = 3;
+    double kappa = 0;
     double t_end = 1.0;
-    double tolerance = 0.01;
+    double tolerance = 0.1;
     double dtMin = 0.0000000000001;
     int numFrames = 10;
     
@@ -41,7 +41,7 @@ int main(int argc, const char * argv[]) {
     std::vector<double> end(1, 0.2);
     BrownianMotion B(init, generator);
     
-    std::cout.precision(4);
+    std::cout.precision(20);
     
     SLE g(&B, kappa, t_end, tolerance, dtMin, numFrames);
     

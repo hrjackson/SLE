@@ -11,86 +11,52 @@
 #include <iostream>
 #include <algorithm>
 
-
-/*//////////////////////////////////////////////////////////////////////////////
-//// SlitMap private member functions //////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////*/
-
-std::complex<double> SlitMap::derivative(std::complex<double> z) {
-    std::complex<double> lhQ = z + lhQuotient;
-    std::complex<double> rhQ = z - rhQuotient;
-    return (1 - alpha + lhQ/rhQ)*pow(rhQ/lhQ, alpha);
+std::complex<double> SlitMap::mySqrt(std::complex<double> z){
+    double theta = std::arg(z);
+    double r = std::abs(z);
+    if (theta < 0) {
+        theta = 2*3.1415926 + theta;
+    }
+    return std::polar(sqrt(r), theta/2);
 }
+
+
 
 /*//////////////////////////////////////////////////////////////////////////////
 //// SlitMap member functions //////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////*/
 
-SlitMap::SlitMap(double alpha, double dt)
-:alpha(alpha), dt(dt) {
-    oneMinusAlpha = 1-alpha;
-    lhQuotient = 2*sqrt(dt*oneMinusAlpha/alpha);
-    rhQuotient = 2*sqrt(dt*alpha/oneMinusAlpha);
-    tol = 0.0000001;
+SlitMap::SlitMap(double offset, double dt)
+:offset(offset), dt(dt) {
 };
 
 SlitMap::SlitMap(){
-    alpha = 0.5;
+    offset = 0.5;
     dt = 0.5;
-    oneMinusAlpha = 0.5;
-    lhQuotient = 1;
-    rhQuotient = 1;
-    tol = 0.000001;
     std::cout << "REALLY shouldn't be needing the default constructor!" << std::endl;
 }
 
 std::complex<double> SlitMap::operator()(std::complex<double> z){
-    // Old code:
-    //std::complex<double> lh = z + 2*sqrt(dt*(1-alpha)/alpha);
-    std::complex<double> lhQ = z + lhQuotient;
-    //std::complex<double> rh = z - 2*sqrt(dt*alpha/(1-alpha));
-    std::complex<double> rhQ = z - rhQuotient;
-    return pow(lhQ, 1-alpha)*pow(rhQ, alpha);
-    //Optimised:
-    //return pow(z + lhQuotient, oneMinusAlpha)*pow(z + rhQuotient, alpha);
+    std::complex<double> result = sqrt( pow(z,2) - 4*dt ) + offset;
+    return result;
 }
 
-// Simple Newton-Raphson calculation. 
 std::complex<double> SlitMap::inverse(std::complex<double> w){
-    std::complex<double> z(0,5);
-    std::complex<double> image = this->operator()(z);
-    int i = 0;
-    while ( (abs(image - w) > tol) && i < 1000 ) {
-        z = z - (image - w)/derivative(z);
-        image = this->operator()(z);
-        ++i;
-    }
-    return z;
+    // Built in sqrt function has branch cut on negative real axis.
+    // We want it on positive real axis, so have to do it by hand.
+    std::complex<double> resultSq = pow(w-offset, 2) + 4*dt;
+    std::complex<double> result = mySqrt(resultSq);
+    return result;
 }
 
-void SlitMap::update(double dt, double alpha){
-    this->alpha = alpha;
+void SlitMap::update(double offset, double dt){
+    this->offset = offset;
     this->dt = dt;
-    oneMinusAlpha = 1-alpha;
-    lhQuotient = 2*sqrt(dt*oneMinusAlpha/alpha);
-    rhQuotient = 2*sqrt(dt*alpha/oneMinusAlpha);
 }
 
-void SlitMap::setAlpha(double newAlpha){
-    alpha = newAlpha;
-    oneMinusAlpha = 1-newAlpha;
-    lhQuotient = 2*sqrt(dt*oneMinusAlpha/alpha);
-    rhQuotient = 2*sqrt(dt*alpha/oneMinusAlpha);
-}
 
-void SlitMap::setDt(double newDt){
-    dt = newDt;
-    lhQuotient = 2*sqrt(dt*oneMinusAlpha/alpha);
-    rhQuotient = 2*sqrt(dt*alpha/oneMinusAlpha);
-}
-
-double SlitMap::getAlpha(){
-    return alpha;
+double SlitMap::getOffset(){
+    return offset;
 }
 
 double SlitMap::getDt(){
@@ -132,7 +98,8 @@ void SLE::singleUpdate(double dt,
                        double& slitSize){
     //double alpha = angle(t+dt, t);
     //candH.update(dt, alpha);
-    candH.update(dt, t, b);
+    double offset = sqrt(kappa)*((*b)(t+dt)[0] - (*b)(t)[0]);
+    candH.update(offset, dt);
     candZ = pointEval(candH(0));
     moved = abs(candZ - z[t]);
     slitSize = abs( candH(0) );
@@ -148,7 +115,7 @@ std::vector<double> SLE::findAdmissibleTimes(double t_end){
 }
 
 void SLE::constructProcess(double t_end, double tolerance, double dtMin){
-    SlitMap candH(0.5, 0);
+    SlitMap candH(0, 0);
     std::complex<double> candZ;
     
     for (auto it = admissibleTimes.begin()+1; it != admissibleTimes.end(); ++it) {
@@ -221,7 +188,7 @@ SLE::SLE(BrownianMotion* b,
     admissibleTimes = findAdmissibleTimes(t_end);
     
     // Initialise maps
-    SlitMap id(0.5, 0);
+    SlitMap id(0, 0);
     h.insert(std::pair<double, SlitMap>(0.0, id));
     z.insert(std::pair<double, std::complex<double>>(0.0, 0.0+0.0i));
     
@@ -313,9 +280,9 @@ std::vector<std::complex<double>> SLE::reverseLine(double time){
 }
 
 SlitMap SLE::slitMap(double time) {
-    double alpha = h[time].getAlpha();
+    double offset = h[time].getOffset();
     double dt = h[time].getDt();
-    SlitMap result(alpha, dt);
+    SlitMap result(offset, dt);
     //SlitMap result(0.3, 0.5);
     return result;
 }

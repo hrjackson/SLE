@@ -18,23 +18,16 @@
 
 class SlitMap {
 private:
-    double alpha;
-    double oneMinusAlpha;
-    double lhQuotient;
-    double rhQuotient;
     double dt;
-    double tol;
-    std::complex<double> derivative(std::complex<double> z);
+    double offset;
+    std::complex<double> mySqrt(std::complex<double> z);
 public:
-    SlitMap(double alpha, double dt);
+    SlitMap(double dt, double offset);
     SlitMap();
     std::complex<double> operator()(std::complex<double> z);
     std::complex<double> inverse(std::complex<double> w);
-    void update(double dt, double alpha);
-    void update(double dt, double t, BrownianMotion* b);
-    void setAlpha(double newAlpha);
-    void setDt(double newDt);
-    double getAlpha();
+    void update(double offset, double dt);
+    double getOffset();
     double getDt();
 };
 

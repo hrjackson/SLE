@@ -97,9 +97,9 @@ void SLEAnimate::updateMatrixForward(SlitMap& h,
                                      double offset,
                                      cv::Mat_<cpx>& matrix){
     for (auto it = matrix.begin(); it != matrix.end(); ++it) {
-        //cpx pt = *it;
-        //cout << pt << endl;
-        *it = h.inverse((*it) + offset);
+        //cout << "before: " << *it << endl;
+        *it = h.inverse((*it));
+        //cout << "after: " << *it << endl;
     }
 }
 
