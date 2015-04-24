@@ -159,7 +159,7 @@ bool SLEAnimate::nextFrame() {
     auto nextTimePtr = frameTimes.upper_bound(currentTime);
     if (nextTimePtr != frameTimes.end() ) {
         double nextTime = *nextTimePtr;
-        for (auto it = times.upper_bound(currentTime); *it <= nextTime; ++it) {
+        for (auto it = times.lower_bound(currentTime); *it < nextTime; ++it) {
             timeUpdate(*it);
         }
         currentTime = nextTime;
