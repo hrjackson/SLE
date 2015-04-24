@@ -83,7 +83,7 @@ cv::Mat_<cpx> SLEAnimate::generatePixelPos() {
 }
 
 void SLEAnimate::timeUpdate(double time){
-    cout << "time = " << time << endl;
+    //cout << "time = " << time << endl;
     SlitMap h = g.slitMap(time);
     double offset = g.drivingFunction(time);
     // Update horizontal and vertical matrices
@@ -177,9 +177,30 @@ void SLEAnimate::show() {
     rightPlot.show();
 }
 
-void SLEAnimate::output() {
+void SLEAnimate::output(int frame) {
     leftPlot.output("left.jpg");
     rightPlot.output("right.jpg");
+    
+    
+    // Get times for loop
+    std::vector<double> times = g.FrameTimes();
+    
+    // Set up filenames
+    std::string strLeft = "./left/";
+    std::string strRight = "./right/";
+    std::string ltName;
+    std::string rtName;
+    std::stringstream ss;
+    
+    ss << std::setfill('0') << std::setw(4);
+    ss << frame;
+    ltName = strLeft + ss.str() + ".jpg";
+    rtName = strRight + ss.str() + ".jpg";
+    ss.str(std::string());
+    ss.clear();
+    
+    leftPlot.output(ltName.c_str());
+    rightPlot.output(rtName.c_str());
 }
 
 
