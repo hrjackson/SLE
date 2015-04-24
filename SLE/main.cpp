@@ -18,10 +18,10 @@
 
 int main(int argc, const char * argv[]) {
     // Parameters
-    double kappa = 0;
+    double kappa = 0.01;
     double t_end = 1.0;
     double tolerance = 0.1;
-    double dtMin = 0.0000000000001;
+    double dtMin = 0.001;
     int numFrames = 10;
     
     int width = 800;
