@@ -37,14 +37,15 @@ SlitMap::SlitMap(){
 }
 
 std::complex<double> SlitMap::operator()(std::complex<double> z){
-    std::complex<double> result = sqrt( pow(z,2) - 4*dt ) + offset;
+    std::complex<double> result = mySqrt( z*z - 4*dt ) + offset;
     return result;
 }
 
 std::complex<double> SlitMap::inverse(std::complex<double> w){
     // Built in sqrt function has branch cut on negative real axis.
     // We want it on positive real axis, so have to do it by hand.
-    std::complex<double> resultSq = pow(w-offset, 2) + 4*dt;
+    std::complex<double> tmp = w-offset;
+    std::complex<double> resultSq = tmp*tmp + 4*dt;
     std::complex<double> result = mySqrt(resultSq);
     return result;
 }
