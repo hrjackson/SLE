@@ -20,8 +20,8 @@ int main(int argc, const char * argv[]) {
     // Parameters
     double kappa = 4;
     double t_end = 1.0;
-    double tolerance = 0.01;
-    double dtMin = 0.000000001;
+    double tolerance = 0.005;
+    double dtMin = 0;
     int numFrames = 1800;
     
     int width = 2880;
@@ -29,7 +29,7 @@ int main(int argc, const char * argv[]) {
     int scale = height/2;
     double border = 0.03;
     
-    double gridRes = 0.005;
+    double gridRes = 0.001;
     double gridSpacing = 0.025;
     
     
