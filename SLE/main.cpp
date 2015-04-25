@@ -30,7 +30,7 @@ int main(int argc, const char * argv[]) {
     double border = 0.03;
     
     double gridRes = 0.005;
-    double gridSpacing = 0.05;
+    double gridSpacing = 0.025;
     
     
     // Start

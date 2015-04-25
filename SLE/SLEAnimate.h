@@ -32,6 +32,9 @@ private:
     cv::Mat_<bool> vtCut;
     // Pixel matrix
     cv::Mat_<cpx> pixelPos;
+    // Stabilisation point. Should stay in roughly the same place,
+    // so we can use its real part to offset the plots
+    cpx stabilser;
     // Dealing with times
     double currentTime;
     set<double> times;
@@ -49,8 +52,8 @@ private:
     // Draw lines corresponding to ROWS in the matrix.
     void drawLines(plot& plot, cv::Mat_<cpx>& matrix);
     void timeUpdate(double time);
-    void updateMatrixForward(SlitMap& h, double offset, cv::Mat_<cpx>& matrix);
-    void updateMatrixReverse(SlitMap& h, double offset, cv::Mat_<cpx>& matrix);
+    void updateMatrixForward(SlitMap& h, cv::Mat_<cpx>& matrix);
+    void updateMatrixReverse(SlitMap& h, cv::Mat_<cpx>& matrix);
     void plot();
 public:
     SLEAnimate(double gridRes,

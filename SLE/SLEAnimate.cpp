@@ -20,17 +20,22 @@ void SLEAnimate::initialiseLeft(){
     cv::Mat_<cpx> tmp = vertical.t();
     drawLines(leftPlot, tmp);
 }
-
+// TODO !!!
 void SLEAnimate::drawLines(class plot& plot, cv::Mat_<cpx>& matrix){
+    double offset = -stabilser.real();
     int rows = matrix.rows;
     int cols = matrix.cols;
     for (int i=0; i<rows; ++i) {
         vector<cpx> line;
         for (int j=0; j<cols; ++j) {
-            line.push_back(matrix(i,j));
+            line.push_back( matrix(i,j) + offset );
         }
-        plot.drawLine(line, Scalar(0,0,0));
+        plot.drawLine(line, Scalar(200,200,200));
     }
+    vector<cpx> offsetLine;
+    offsetLine.push_back(offset - cpx(0, gridSpacing/2));
+    offsetLine.push_back(offset + cpx(0, gridSpacing/2));
+    plot.drawLine(offsetLine, Scalar(255,0,0));
 }
 
 cv::Mat_<cpx> SLEAnimate::generateHorizontal(){
@@ -85,29 +90,25 @@ cv::Mat_<cpx> SLEAnimate::generatePixelPos() {
 void SLEAnimate::timeUpdate(double time){
     //cout << "time = " << time << endl;
     SlitMap h = g.slitMap(time);
-    double offset = g.drivingFunction(time);
+    stabilser = h.inverse(stabilser);
     // Update horizontal and vertical matrices
-    updateMatrixForward(h, offset, horizontal);
-    updateMatrixForward(h, offset, vertical);
+    updateMatrixForward(h, horizontal);
+    updateMatrixForward(h, vertical);
     // And the pixels, in the reverse direction
     //updateMatrixReverse(h, offset, pixelPos);
 }
 
 void SLEAnimate::updateMatrixForward(SlitMap& h,
-                                     double offset,
                                      cv::Mat_<cpx>& matrix){
     for (auto it = matrix.begin(); it != matrix.end(); ++it) {
-        //cout << "before: " << *it << endl;
         *it = h.inverse((*it));
-        //cout << "after: " << *it << endl;
     }
 }
 
 void SLEAnimate::updateMatrixReverse(SlitMap& h,
-                                     double offset,
                                      cv::Mat_<cpx>& matrix){
     for (auto it = matrix.begin(); it != matrix.end(); ++it) {
-        *it = h((*it) + offset);
+        *it = h((*it));
     }
 }
 
@@ -146,6 +147,9 @@ g(g), leftPlot(left), rightPlot(right) {
     //cout << "The vertical matrix:" << endl;
     //cout << vertical << endl;
     vtOriginalPos = vertical;
+    // Initialise the stabilisation point to somewhere far away
+    // on the imaginary axis
+    stabilser = cpx(0, 50);
     // Initialise the pixel matrix
     pixelPos = generatePixelPos();
     // Initialise the times
@@ -153,6 +157,7 @@ g(g), leftPlot(left), rightPlot(right) {
     frameTimes = g.orderedFrameTimes();
     currentTime = 0;
     initialiseLeft();
+    plot();
 }
 
 bool SLEAnimate::nextFrame() {
