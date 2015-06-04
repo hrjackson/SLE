@@ -13,6 +13,7 @@
 #include <vector>
 #include <map>
 #include <random>
+#include <chrono>
 
 class Process {
 protected:
@@ -44,6 +45,12 @@ public:
     }
 };
 
+class ProcessExample {
+public:
+	ProcessExample();
+	std::vector<double> operator()(double time);
+};
+
 class BrownianMotion : public Process {
 private:
     std::mt19937_64 generator;
@@ -52,7 +59,7 @@ public:
     std::vector<double> operator()(double time);
     BrownianMotion(std::vector<double> initial_pos)
     :Process(initial_pos) {
-        long long seed = std::chrono::system_clock::now().time_since_epoch().count();
+		long long seed = std::chrono::system_clock::now().time_since_epoch().count();
         generator.seed(seed);
     };
     BrownianMotion(std::vector<double> initial_pos, std::mt19937_64 generator)

@@ -142,7 +142,6 @@ g(g), leftPlot(left), rightPlot(right) {
     //cout << "The horizontal matrix:" << endl;
     //cout << horizontal << endl;
     hzOriginalPos = horizontal;
-    hzCut = Mat_<bool>(horizontal.rows, horizontal.cols);
     vertical = generateVertical();
     //cout << "The vertical matrix:" << endl;
     //cout << vertical << endl;
@@ -191,8 +190,8 @@ void SLEAnimate::output(int frame) {
     std::vector<double> times = g.FrameTimes();
     
     // Set up filenames
-    std::string strLeft = "./left/";
-    std::string strRight = "./right/";
+    std::string strLeft = "D:\\sleOutput\\left\\";
+    std::string strRight = "D:\\sleOutput\\right\\";
     std::string ltName;
     std::string rtName;
     std::stringstream ss;

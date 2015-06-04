@@ -191,7 +191,7 @@ SLE::SLE(BrownianMotion* b,
     // Initialise maps
     SlitMap id(0, 0);
     h.insert(std::pair<double, SlitMap>(0.0, id));
-    z.insert(std::pair<double, std::complex<double>>(0.0, 0.0+0.0i));
+    z.insert(std::pair<double, std::complex<double> >(0.0, std::complex<double>(0.0, 0.0)));
     
     constructProcess(t_end, tolerance, dtMin);
 }

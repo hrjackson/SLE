@@ -26,10 +26,8 @@ private:
     // Line matrices
     cv::Mat_<cpx> horizontal;
     cv::Mat_<cpx> hzOriginalPos;
-    cv::Mat_<bool> hzCut;
     cv::Mat_<cpx> vertical;
     cv::Mat_<cpx> vtOriginalPos;
-    cv::Mat_<bool> vtCut;
     // Pixel matrix
     cv::Mat_<cpx> pixelPos;
     // Stabilisation point. Should stay in roughly the same place,
@@ -44,10 +42,10 @@ private:
     SLE& g;
     plot &leftPlot;
     plot &rightPlot;
+	/*---- Private functions ----*/
     cv::Mat_<cpx> generateHorizontal();
     cv::Mat_<cpx> generateVertical();
     cv::Mat_<cpx> generatePixelPos();
-    /*---- Private functions ----*/
     void initialiseLeft();
     // Draw lines corresponding to ROWS in the matrix.
     void drawLines(plot& plot, cv::Mat_<cpx>& matrix);
@@ -63,6 +61,7 @@ public:
     bool nextFrame();
     void show();
     void output(int frame);
+	void plotForward();
 };
 
 #endif /* defined(__SLE__SLEAnimate__) */

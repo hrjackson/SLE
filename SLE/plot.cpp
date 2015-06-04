@@ -65,8 +65,8 @@ void plot::drawAxis() {
     int thickness = 2;
     // Draw the real axis
     cv::line(image,
-             Point( border*width, (1-border)*height ),
-             Point( (1-border)*width, (1-border)* height),
+             Point( 0, (1-border)*height ),
+             Point( width, (1-border)* height),
              Scalar(0,0,0),
              thickness);
     // And the little mark at the origin
