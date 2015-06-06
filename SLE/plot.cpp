@@ -43,6 +43,7 @@ void plot::drawLine(cpx point, Scalar colour) {
     currentPosition = endPoint;
 }
 
+
 void plot::drawLine(vector<cpx> points, Scalar colour=Scalar(0,0,0)){
     if (points.size() != 0){
         currentPosition = cpxToCV(points.front());

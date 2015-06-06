@@ -16,10 +16,17 @@
 #include "plot.h"
 #include "SLEAnimate.h"
 
+#include <opencv2/core/core.hpp>
+#include <opencv2/highgui/highgui.hpp>
+#include <opencv2/imgproc/imgproc.hpp>
+
+
 using namespace std;
+using namespace cv;
 
 int main(int argc, const char * argv[]) {
     // Parameters
+    
 	vector<double> kappa = { 1 };
     double t_end = 0.99;
     double tolerance = 0.05;
@@ -33,6 +40,7 @@ int main(int argc, const char * argv[]) {
     
     double gridRes = 0.01;
     double gridSpacing = 0.25;
+    
     
     
     // Start

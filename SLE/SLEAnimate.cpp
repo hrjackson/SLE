@@ -15,22 +15,25 @@
 
 void SLEAnimate::initialiseLeft(){
     leftPlot.drawAxis();
-    drawLines(leftPlot, horizontal);
+    drawLines(leftPlot, horizontal, hzColour);
     
     cv::Mat_<cpx> tmp = vertical.t();
-    drawLines(leftPlot, tmp);
+    Mat tmpColour = vtColour.t();
+    drawLines(leftPlot, tmp, tmpColour);
 }
 // TODO !!!
-void SLEAnimate::drawLines(class plot& plot, cv::Mat_<cpx>& matrix){
+void SLEAnimate::drawLines(class plot& plot, cv::Mat_<cpx>& matrix, Mat& colours){
     double offset = -stabilser.real();
     int rows = matrix.rows;
     int cols = matrix.cols;
     for (int i=0; i<rows; ++i) {
         vector<cpx> line;
-        for (int j=0; j<cols; ++j) {
-            line.push_back( matrix(i,j) + offset );
+        for (int j=0; j<cols-1; ++j) {
+            line = vector<cpx>{matrix(i,j) + offset, matrix(i,j+1) + offset};
+            Vec3b col = colours.at<Vec3b>(i,j);
+            Scalar colScalar = Scalar( (double)col[0], (double)col[1], (double)col[2] );
+            plot.drawLine(line, colScalar);
         }
-        plot.drawLine(line, Scalar(200,200,200));
     }
     vector<cpx> offsetLine;
     offsetLine.push_back(offset - cpx(0, gridSpacing/2));
@@ -87,6 +90,34 @@ cv::Mat_<cpx> SLEAnimate::generatePixelPos() {
     return result;
 }
 
+Vec3b SLEAnimate::cpxToColour(cpx z) {
+    Vec3b result;
+    double x = z.real();
+    double y = z.imag();
+    
+    // The height of the point, relative to the maximum
+    double yProp = y/lineHeight;
+    int yCV = int((darkRows-1)*(1-yProp));
+    
+    // Similar for x, but x can be negative
+    double xProp = (x/lineWidth + 1)/2;
+    int xCV = int((darkCols-1)*xProp);
+    
+    result = dark.at<Vec3b>(yCV, xCV);
+    return result;
+}
+
+Mat SLEAnimate::generateColours(Mat_<cpx>& points) {
+    Mat result = Mat::Mat(points.rows, points.cols, CV_8UC3, Scalar(255,255,255));
+    for (int i = 0; i < points.rows; ++i){
+        for (int j = 0; j < points.cols; ++j) {
+            result.at<Vec3b>(i,j) = cpxToColour(points.at<cpx>(i,j));
+        }
+    }
+    return result;
+}
+
+
 void SLEAnimate::timeUpdate(double time){
     //cout << "time = " << time << endl;
     SlitMap h = g.slitMap(time);
@@ -115,9 +146,10 @@ void SLEAnimate::updateMatrixReverse(SlitMap& h,
 
 void SLEAnimate::plot() {
     rightPlot.clear();
-    drawLines(rightPlot, horizontal);
+    drawLines(rightPlot, horizontal, hzColour);
     cv::Mat_<cpx> tmp = vertical.t();
-    drawLines(rightPlot, tmp);
+    Mat tmpColour = vtColour.t();
+    drawLines(rightPlot, tmp, tmpColour);
     if (currentTime > 0) {
         leftPlot.drawLine(g.forwardLine( *(--frameTimes.lower_bound(currentTime)),
                                         currentTime),
@@ -137,15 +169,21 @@ SLEAnimate::SLEAnimate(double gridRes,
                        class plot& right)
 :gridRes(gridRes), gridSpacing(gridSpacing),
 g(g), leftPlot(left), rightPlot(right) {
+    // Import the colour matrices
+    dark = imread("/Users/henry/tmp/colours/dark.png", CV_LOAD_IMAGE_COLOR);
+    //imshow("hello", dark);
+    //waitKey();
+    darkRows = dark.rows;
+    darkCols = dark.cols;
+    
     // Initialise the line matrices
+    lineHeight = 2*leftPlot.maxY();
+    lineWidth = 2*leftPlot.maxX();
     horizontal = generateHorizontal();
-    //cout << "The horizontal matrix:" << endl;
-    //cout << horizontal << endl;
-    hzOriginalPos = horizontal;
+    hzColour = generateColours(horizontal);
     vertical = generateVertical();
-    //cout << "The vertical matrix:" << endl;
-    //cout << vertical << endl;
-    vtOriginalPos = vertical;
+    vtColour = generateColours(vertical);
+    
     // Initialise the stabilisation point to somewhere far away
     // on the imaginary axis
     stabilser = cpx(0, 50);
@@ -182,16 +220,18 @@ void SLEAnimate::show() {
 }
 
 void SLEAnimate::output(int frame) {
-    leftPlot.output("left.jpg");
-    rightPlot.output("right.jpg");
+    //leftPlot.output("left.jpg");
+    //rightPlot.output("right.jpg");
     
     
     // Get times for loop
     std::vector<double> times = g.FrameTimes();
     
     // Set up filenames
-    std::string strLeft = "D:\\sleOutput\\left\\";
-    std::string strRight = "D:\\sleOutput\\right\\";
+    //std::string strLeft = "D:\\sleOutput\\left\\";
+    //std::string strRight = "D:\\sleOutput\\right\\";
+    std::string strLeft = "/Users/henry/tmp/left/";
+    std::string strRight = "Users/henry/tmp/right/";
     std::string ltName;
     std::string rtName;
     std::stringstream ss;

@@ -18,6 +18,7 @@
 #include "plot.h"
 
 using namespace std;
+using namespace cv;
 
 typedef complex<double> cpx;
 
@@ -25,9 +26,16 @@ class SLEAnimate {
 private:
     // Line matrices
     cv::Mat_<cpx> horizontal;
-    cv::Mat_<cpx> hzOriginalPos;
+    cv::Mat hzColour;
     cv::Mat_<cpx> vertical;
-    cv::Mat_<cpx> vtOriginalPos;
+    cv::Mat vtColour;
+    double lineHeight;
+    double lineWidth;
+    // Colour matrices
+    cv::Mat dark;
+    int darkRows;
+    int darkCols;
+    //cv::Mat light;
     // Pixel matrix
     cv::Mat_<cpx> pixelPos;
     // Stabilisation point. Should stay in roughly the same place,
@@ -47,8 +55,13 @@ private:
     cv::Mat_<cpx> generateVertical();
     cv::Mat_<cpx> generatePixelPos();
     void initialiseLeft();
+    // Convert a complex number in the "colour patch" to its
+    // corresponding colour
+    Vec3b cpxToColour(cpx z);
+    // Convert a whole matrix of points to their corresponding colours
+    Mat generateColours(Mat_<cpx>& points);
     // Draw lines corresponding to ROWS in the matrix.
-    void drawLines(plot& plot, cv::Mat_<cpx>& matrix);
+    void drawLines(plot& plot, cv::Mat_<cpx>& matrix, Mat& colours);
     void timeUpdate(double time);
     void updateMatrixForward(SlitMap& h, cv::Mat_<cpx>& matrix);
     void updateMatrixReverse(SlitMap& h, cv::Mat_<cpx>& matrix);
