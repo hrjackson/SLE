@@ -170,7 +170,7 @@ SLEAnimate::SLEAnimate(double gridRes,
 :gridRes(gridRes), gridSpacing(gridSpacing),
 g(g), leftPlot(left), rightPlot(right) {
     // Import the colour matrices
-    dark = imread("/Users/henry/tmp/colours/dark.png", CV_LOAD_IMAGE_COLOR);
+    dark = imread("/Users/Henry/tmp/colours/dark.png", CV_LOAD_IMAGE_COLOR);
     //imshow("hello", dark);
     //waitKey();
     darkRows = dark.rows;
@@ -231,15 +231,15 @@ void SLEAnimate::output(int frame) {
     //std::string strLeft = "D:\\sleOutput\\left\\";
     //std::string strRight = "D:\\sleOutput\\right\\";
     std::string strLeft = "/Users/henry/tmp/left/";
-    std::string strRight = "Users/henry/tmp/right/";
+    std::string strRight = "/Users/henry/tmp/right/";
     std::string ltName;
     std::string rtName;
     std::stringstream ss;
     
     ss << std::setfill('0') << std::setw(4);
     ss << frame;
-    ltName = strLeft + ss.str() + ".jpg";
-    rtName = strRight + ss.str() + ".jpg";
+    ltName = strLeft + ss.str() + ".png";
+    rtName = strRight + ss.str() + ".png";
     ss.str(std::string());
     ss.clear();
     

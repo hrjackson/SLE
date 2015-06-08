@@ -346,9 +346,12 @@
 		BA89C1A21A8A579100465451 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					/usr/local/Cellar/cairo/1.14.0/lib,
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				OTHER_LDFLAGS = (
+					"-lopencv_core",
+					"-lopencv_imgproc",
+					"-lopencv_highgui",
+					"-lopencv_imgcodecs",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -357,9 +360,12 @@
 		BA89C1A31A8A579100465451 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					/usr/local/Cellar/cairo/1.14.0/lib,
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				OTHER_LDFLAGS = (
+					"-lopencv_core",
+					"-lopencv_imgproc",
+					"-lopencv_highgui",
+					"-lopencv_imgcodecs",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
