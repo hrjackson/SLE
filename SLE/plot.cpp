@@ -125,3 +125,16 @@ int plot::rows(){
 int plot::cols(){
     return width;
 }
+
+Mat_<cpx> plot::points(){
+    int W = width;
+    int H = (1-border)*height;
+    Mat_<cpx> result = Mat::Mat(H, W, CV_8UC3, Scalar(255,255,255));
+    for (int i = 0; i < H; ++i) {
+        for (int j = 0; j < W; ++j) {
+            result(i,j) = CVTocpx(Point(i,j));
+        }
+    }
+    
+    return result;
+}

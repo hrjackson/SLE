@@ -21,7 +21,7 @@ void SLEAnimate::initialiseLeft(){
     Mat tmpColour = vtColour.t();
     drawLines(leftPlot, tmp, tmpColour);
 }
-// TODO !!!
+
 void SLEAnimate::drawLines(class plot& plot, cv::Mat_<cpx>& matrix, Mat& colours){
     double offset = -stabilser.real();
     int rows = matrix.rows;
@@ -183,6 +183,9 @@ g(g), leftPlot(left), rightPlot(right) {
     hzColour = generateColours(horizontal);
     vertical = generateVertical();
     vtColour = generateColours(vertical);
+    
+    // Initialise pixel position matrix
+    pixelPos = leftPlot.points();
     
     // Initialise the stabilisation point to somewhere far away
     // on the imaginary axis

@@ -31,12 +31,15 @@ private:
     cv::Mat vtColour;
     double lineHeight;
     double lineWidth;
+    // Background matrices
+    cv::Mat_<cpx> pxOriginal;
+    cv::Mat_<cpx> pxNow;
     // Colour matrices
     cv::Mat dark;
     int darkRows;
     int darkCols;
     //cv::Mat light;
-    // Pixel matrix
+    // Pixel matrix: holds the original position of the pixels
     cv::Mat_<cpx> pixelPos;
     // Stabilisation point. Should stay in roughly the same place,
     // so we can use its real part to offset the plots

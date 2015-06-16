@@ -52,6 +52,9 @@ public:
     double maxY();
     int rows();
     int cols();
+    // Returns a matrix containing all the points above the real axis that
+    // the plot considers
+    Mat_<cpx> points();
 };
 
 #endif /* defined(__SLE__plot__) */
