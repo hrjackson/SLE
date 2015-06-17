@@ -126,13 +126,17 @@ int plot::cols(){
     return width;
 }
 
+void plot::colour(int row, int col, Vec3b colour){
+    image.at<Vec3b>(row,col) = colour;
+}
+
 Mat_<cpx> plot::points(){
     int W = width;
     int H = (1-border)*height;
 	Mat_<cpx> result(H, W);
     for (int i = 0; i < H; ++i) {
         for (int j = 0; j < W; ++j) {
-            result(i,j) = CVTocpx(Point(i,j));
+            result(i,j) = CVTocpx(Point(j,i));
         }
     }
     

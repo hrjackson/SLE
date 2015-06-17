@@ -52,6 +52,7 @@ public:
     double maxY();
     int rows();
     int cols();
+    void colour(int row, int col, Vec3b colour);
     // Returns a matrix containing all the points above the real axis that
     // the plot considers
     Mat_<cpx> points();

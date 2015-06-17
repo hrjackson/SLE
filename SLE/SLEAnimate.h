@@ -40,6 +40,9 @@ private:
     cv::Mat dark;
     int darkRows;
     int darkCols;
+    Mat light;
+    int lightRows;
+    int lightCols;
     //cv::Mat light;
     // Stabilisation point. Should stay in roughly the same place,
     // so we can use its real part to offset the plots
@@ -60,15 +63,25 @@ private:
     void initialiseLeft();
     // Convert a complex number in the "colour patch" to its
     // corresponding colour
-    Vec3b cpxToColour(cpx z);
+    Vec3b cpxToColour(cpx z, bool shader);
     // Convert a whole matrix of points to their corresponding colours
-    Mat generateColours(Mat_<cpx>& points);
+    Mat generateColours(Mat_<cpx>& points, bool shader);
     // Draw lines corresponding to ROWS in the matrix.
     void drawLines(plot& plot, cv::Mat_<cpx>& matrix, Mat& colours);
+    void drawColours(plot& plot, Mat_<cpx>& points);
     void timeUpdate(double time);
-    void updateMatrixForward(SlitMap& h, cv::Mat_<cpx>& matrix);
-    void updateMatrixReverse(SlitMap& h, cv::Mat_<cpx>& matrix);
-	void updatePixels(double endTime);
+    void updateMatrixForward(SlitMap& h,
+                             Mat_<cpx>& inMat,
+                             Mat_<cpx>& outMat);
+    void updateMatrixForward(vector<SlitMap>& h,
+                             Mat_<cpx>& inMat,
+                             Mat_<cpx>& outMat);
+    void updateMatrixReverse(SlitMap& h,
+                             Mat_<cpx>& inMat,
+                             Mat_<cpx>& outMat);
+    void updateMatrixReverse(vector<SlitMap>& h,
+                             Mat_<cpx>& inMat,
+                             Mat_<cpx>& outMat);
     void plot();
 public:
     SLEAnimate(double gridRes,
