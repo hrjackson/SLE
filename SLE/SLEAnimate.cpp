@@ -45,8 +45,8 @@ cv::Mat_<cpx> SLEAnimate::generateHorizontal(){
 
     double width = 2*(leftPlot.maxX() - leftPlot.minX());
     double height = 2*leftPlot.maxY();
-    int rows = (int)(height/gridSpacing) + 1;
-    int cols = width/gridRes + 1;
+    int rows = (int)(height/gridSpacing);
+    int cols = width/gridRes;
     cv::Mat_<cpx> result(rows, cols);
     cpx heightIncrement(0, gridSpacing);
     cpx widthIncrement(gridRes, 0);
@@ -78,6 +78,7 @@ cv::Mat_<cpx> SLEAnimate::generateVertical() {
     return result;
 }
 
+/*
 cv::Mat_<cpx> SLEAnimate::generatePixelPos() {
     int rows = rightPlot.rows();
     int cols = rightPlot.cols();
@@ -89,6 +90,7 @@ cv::Mat_<cpx> SLEAnimate::generatePixelPos() {
     }
     return result;
 }
+*/
 
 Vec3b SLEAnimate::cpxToColour(cpx z) {
     Vec3b result;
@@ -101,6 +103,7 @@ Vec3b SLEAnimate::cpxToColour(cpx z) {
     
     // Similar for x, but x can be negative
     double xProp = (x/lineWidth + 1)/2;
+	if (xProp > 1) xProp = 1;
     int xCV = int((darkCols-1)*xProp);
     
     result = dark.at<Vec3b>(yCV, xCV);
@@ -143,6 +146,10 @@ void SLEAnimate::updateMatrixReverse(SlitMap& h,
     }
 }
 
+// Updates the pxNow matrix to be the pre-image of the pxOriginal matrix
+void SLEAnimate::updatePixels(double endTime) {
+	cout << "Hello" << endl;
+}
 
 void SLEAnimate::plot() {
     rightPlot.clear();
@@ -170,7 +177,7 @@ SLEAnimate::SLEAnimate(double gridRes,
 :gridRes(gridRes), gridSpacing(gridSpacing),
 g(g), leftPlot(left), rightPlot(right) {
     // Import the colour matrices
-    dark = imread("/Users/Henry/tmp/colours/dark.png", CV_LOAD_IMAGE_COLOR);
+    dark = imread("D:\\sleOutput\\col\\dark.png", CV_LOAD_IMAGE_COLOR);
     //imshow("hello", dark);
     //waitKey();
     darkRows = dark.rows;
@@ -185,13 +192,13 @@ g(g), leftPlot(left), rightPlot(right) {
     vtColour = generateColours(vertical);
     
     // Initialise pixel position matrix
-    pixelPos = leftPlot.points();
+    pxOriginal = leftPlot.points();
     
     // Initialise the stabilisation point to somewhere far away
     // on the imaginary axis
-    stabilser = cpx(0, 50);
+    stabilser = cpx(0, 1000);
     // Initialise the pixel matrix
-    pixelPos = generatePixelPos();
+    //pixelPos = generatePixelPos();
     // Initialise the times
     times = g.getOrderedTimes();
     frameTimes = g.orderedFrameTimes();
@@ -207,6 +214,7 @@ bool SLEAnimate::nextFrame() {
         for (auto it = times.lower_bound(currentTime); *it < nextTime; ++it) {
             timeUpdate(*it);
         }
+		updatePixels(nextTime);
         currentTime = nextTime;
         plot();
         return true;
@@ -223,18 +231,12 @@ void SLEAnimate::show() {
 }
 
 void SLEAnimate::output(int frame) {
-    //leftPlot.output("left.jpg");
-    //rightPlot.output("right.jpg");
-    
-    
-    // Get times for loop
-    std::vector<double> times = g.FrameTimes();
-    
+
     // Set up filenames
-    //std::string strLeft = "D:\\sleOutput\\left\\";
-    //std::string strRight = "D:\\sleOutput\\right\\";
-    std::string strLeft = "/Users/henry/tmp/left/";
-    std::string strRight = "/Users/henry/tmp/right/";
+    std::string strLeft = "D:\\sleOutput\\left\\";
+    std::string strRight = "D:\\sleOutput\\right\\";
+    //std::string strLeft = "/Users/henry/tmp/left/";
+    //std::string strRight = "/Users/henry/tmp/right/";
     std::string ltName;
     std::string rtName;
     std::stringstream ss;

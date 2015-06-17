@@ -38,7 +38,7 @@ void plot::drawLine(cpx point, Scalar colour) {
          currentPosition,
          endPoint,
          colour,
-         1,
+         2,
          CV_AA);
     currentPosition = endPoint;
 }
@@ -129,7 +129,7 @@ int plot::cols(){
 Mat_<cpx> plot::points(){
     int W = width;
     int H = (1-border)*height;
-    Mat_<cpx> result = Mat::Mat(H, W, CV_8UC3, Scalar(255,255,255));
+	Mat_<cpx> result(H, W);
     for (int i = 0; i < H; ++i) {
         for (int j = 0; j < W; ++j) {
             result(i,j) = CVTocpx(Point(i,j));

@@ -29,7 +29,9 @@ private:
     cv::Mat hzColour;
     cv::Mat_<cpx> vertical;
     cv::Mat vtColour;
+	// Height the lines in the grid go up to
     double lineHeight;
+	// Width the lines in the grid go out to, dist from centre
     double lineWidth;
     // Background matrices
     cv::Mat_<cpx> pxOriginal;
@@ -39,8 +41,6 @@ private:
     int darkRows;
     int darkCols;
     //cv::Mat light;
-    // Pixel matrix: holds the original position of the pixels
-    cv::Mat_<cpx> pixelPos;
     // Stabilisation point. Should stay in roughly the same place,
     // so we can use its real part to offset the plots
     cpx stabilser;
@@ -56,7 +56,7 @@ private:
 	/*---- Private functions ----*/
     cv::Mat_<cpx> generateHorizontal();
     cv::Mat_<cpx> generateVertical();
-    cv::Mat_<cpx> generatePixelPos();
+    //cv::Mat_<cpx> generatePixelPos();
     void initialiseLeft();
     // Convert a complex number in the "colour patch" to its
     // corresponding colour
@@ -68,6 +68,7 @@ private:
     void timeUpdate(double time);
     void updateMatrixForward(SlitMap& h, cv::Mat_<cpx>& matrix);
     void updateMatrixReverse(SlitMap& h, cv::Mat_<cpx>& matrix);
+	void updatePixels(double endTime);
     void plot();
 public:
     SLEAnimate(double gridRes,
