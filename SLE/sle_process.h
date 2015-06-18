@@ -16,6 +16,9 @@
 #include <map>
 #include "stochastic_processes.h"
 
+using namespace std;
+typedef complex<double> cpx;
+
 class SlitMap {
 private:
     double dt;
@@ -29,6 +32,8 @@ public:
     void update(double offset, double dt);
     double getOffset();
     double getDt();
+    std::complex<double> old(cpx z);
+    cpx inverseOld(cpx z);
 };
 
 

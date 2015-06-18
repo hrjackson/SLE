@@ -37,26 +37,20 @@ TEST_CASE( "SlitMap class tested", "[SlitMap]"){
     }
     
     SECTION( "Testing general map by hand"){
-        std::complex<double> lh;
-        std::complex<double> rh;
         std::complex<double> image;
         
         
-        lh = z + 2*sqrt(dt*(1-alpha)/alpha);
-        rh = z - 2*sqrt(dt*alpha/(1-alpha));
-        image = pow(lh, 1-alpha)*pow(rh, alpha);
         
-        REQUIRE( abs( h(z) - image) < eps);
+        image = h.old(z);
+        cpx test = h(z);
         
-        lh = w + 2*sqrt(dt*(1-alpha)/alpha);
-        rh = w - 2*sqrt(dt*alpha/(1-alpha));
-        image = pow(lh, 1-alpha)*pow(rh, alpha);
+        REQUIRE( abs( test - image) < eps);
+        
+        image = h.old(w);
         
         REQUIRE( abs( h(w) - image) < eps);
         
-        lh = zero + 2*sqrt(dt*(1-alpha)/alpha);
-        rh = zero - 2*sqrt(dt*alpha/(1-alpha));
-        image = pow(lh, 1-alpha)*pow(rh, alpha);
+        image = h.old(zero);
         
         REQUIRE( abs( h(zero) - image) < eps);
         
