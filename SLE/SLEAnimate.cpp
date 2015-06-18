@@ -25,7 +25,8 @@ void SLEAnimate::initialiseLeft(){
 }
 
 void SLEAnimate::drawLines(class plot& plot, cv::Mat_<cpx>& matrix, Mat& colours){
-    double offset = -stabilser.real();
+    //double offset = -stabilser.real();
+    double offset = 0.0;
     int rows = matrix.rows;
     int cols = matrix.cols;
     for (int i=0; i<rows; ++i) {
@@ -140,18 +141,6 @@ Mat SLEAnimate::generateColours(Mat_<cpx>& points, bool shader) {
     return result;
 }
 
-
-void SLEAnimate::timeUpdate(double time){
-    //cout << "time = " << time << endl;
-    SlitMap h = g.slitMap(time);
-    stabilser = h.inverse(stabilser);
-    // Update horizontal and vertical matrices
-    updateMatrixForward(h, horizontal, horizontal);
-    updateMatrixForward(h, vertical, vertical);
-    // And the pixels, in the reverse direction
-    //updateMatrixReverse(h, offset, pixelPos);
-}
-
 void SLEAnimate::updateMatrixForward(SlitMap& h,
                                      Mat_<cpx>& inMat,
                                      Mat_<cpx>& outMat){
@@ -185,7 +174,9 @@ void SLEAnimate::updateMatrixReverse(vector<SlitMap>& h,
                                      Mat_<cpx>& inMat,
                                      Mat_<cpx>& outMat){
     for (auto it = h.begin(); it != h.end(); ++it) {
-        updateMatrixForward(*it, inMat, outMat);
+        //cout << inMat.at<cpx>(10,10) << " " << outMat.at<cpx>(10,10) << endl;
+        updateMatrixReverse(*it, inMat, outMat);
+        //cout << inMat.at<cpx>(10,10) << " " << outMat.at<cpx>(10,10) << endl;
     }
     
 }
@@ -235,6 +226,7 @@ g(g), leftPlot(left), rightPlot(right) {
     
     // Initialise pixel position matrix
     pxOriginal = leftPlot.points();
+    //cout << pxOriginal << endl;
     pxNow = leftPlot.points();
     
     // Initialise the stabilisation point to somewhere far away
@@ -256,18 +248,28 @@ bool SLEAnimate::nextFrame() {
         double nextTime = *nextTimePtr;
         vector<SlitMap> gridMaps;
         vector<SlitMap> pixelMaps;
-        SlitMap h;
+        SlitMap h = g.slitMap(0);
         for (auto it = times.lower_bound(currentTime); *it < nextTime; ++it) {
             h = g.slitMap(*it);
             gridMaps.push_back(h);
             stabilser = h.inverse(stabilser);
         }
         for (auto it = times.begin(); *it < nextTime; ++it) {
-            pixelMaps.push_back(g.slitMap(*it));
+            h = g.slitMap(*it);
+            pixelMaps.push_back(h);
         }
+        
+        
         updateMatrixForward(gridMaps, horizontal, horizontal);
         updateMatrixForward(gridMaps, vertical, vertical);
-        updateMatrixReverse(pixelMaps, pxOriginal, pxNow);
+        
+        
+        //cout << pxOriginal.at<cpx>(10,10) << " " << pxNow.at<cpx>(10,10) << endl;
+        updateMatrixReverse(gridMaps, pxNow, pxNow);
+        //updateMatrixForward(gridMaps, pxNow, pxNow);
+        
+        //cout << pxOriginal.at<cpx>(10,10) << " " << pxNow.at<cpx>(10,10) << endl;
+        //cout << pxNow << endl;
         currentTime = nextTime;
         plot();
         return true;

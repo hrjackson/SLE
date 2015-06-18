@@ -69,7 +69,6 @@ private:
     // Draw lines corresponding to ROWS in the matrix.
     void drawLines(plot& plot, cv::Mat_<cpx>& matrix, Mat& colours);
     void drawColours(plot& plot, Mat_<cpx>& points);
-    void timeUpdate(double time);
     void updateMatrixForward(SlitMap& h,
                              Mat_<cpx>& inMat,
                              Mat_<cpx>& outMat);

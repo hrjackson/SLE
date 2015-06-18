@@ -236,6 +236,12 @@
 					"DEBUG=1",
 					"$(inherited)",
 				);
+				OTHER_LDFLAGS = (
+					"-lopencv_imgproc",
+					"-lopencv_core",
+					"-lopencv_highgui",
+					"-lopencv_imgcodecs",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -243,6 +249,12 @@
 		BA328A161ABAF67500BD56DA /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				OTHER_LDFLAGS = (
+					"-lopencv_imgproc",
+					"-lopencv_core",
+					"-lopencv_highgui",
+					"-lopencv_imgcodecs",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;

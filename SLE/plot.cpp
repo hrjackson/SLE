@@ -136,7 +136,7 @@ Mat_<cpx> plot::points(){
 	Mat_<cpx> result(H, W);
     for (int i = 0; i < H; ++i) {
         for (int j = 0; j < W; ++j) {
-            result(i,j) = CVTocpx(Point(j,i));
+            result.at<cpx>(i,j) = CVTocpx(Point(j,i));
         }
     }
     

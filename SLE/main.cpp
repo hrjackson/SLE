@@ -33,13 +33,18 @@ int main(int argc, const char * argv[]) {
     double dtMin = 0.001;
     int numFrames = 18;
     
-    int width = 2880/10;
+    int width =  2880/10;
     int height = 1800/10;
     int scale = height/2;
     double border = 0.03;
     
-    double gridRes = 0.01;
+    double gridRes = 0.001;
     double gridSpacing = 0.25;
+    
+    //plot p(width, height, scale, border);
+    //cout << p.points() << endl;
+    //cout << p.CVTocpx(Point(1,1)) << endl;
+    //cout << p.cpxToCV(complex<double>(1.0, 1.0));
     
     
     
@@ -72,6 +77,7 @@ int main(int argc, const char * argv[]) {
 		}
 		sa.output(numFrames - 1);
 	}
+    
     
     return 0;
 }
