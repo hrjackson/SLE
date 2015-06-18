@@ -31,7 +31,7 @@ int main(int argc, const char * argv[]) {
     double t_end = 0.99;
     double tolerance = 0.05;
     double dtMin = 0.001;
-    int numFrames = 18;
+    int numFrames = 36;
     
     int width =  2880/10;
     int height = 1800/10;

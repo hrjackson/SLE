@@ -47,6 +47,7 @@ private:
     // Stabilisation point. Should stay in roughly the same place,
     // so we can use its real part to offset the plots
     cpx stabilser;
+    cpx stabiliserReverse;
     // Dealing with times
     double currentTime;
     set<double> times;

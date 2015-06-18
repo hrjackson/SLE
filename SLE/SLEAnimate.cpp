@@ -173,9 +173,13 @@ void SLEAnimate::updateMatrixReverse(SlitMap& h,
 void SLEAnimate::updateMatrixReverse(vector<SlitMap>& h,
                                      Mat_<cpx>& inMat,
                                      Mat_<cpx>& outMat){
-    for (auto it = h.begin(); it != h.end(); ++it) {
+    auto it = h.rbegin();
+    updateMatrixReverse(*it, inMat, outMat);
+    ++it;
+    while (it != h.rend()) {
         //cout << inMat.at<cpx>(10,10) << " " << outMat.at<cpx>(10,10) << endl;
-        updateMatrixReverse(*it, inMat, outMat);
+        updateMatrixReverse( *it, outMat, outMat);
+        ++it;
         //cout << inMat.at<cpx>(10,10) << " " << outMat.at<cpx>(10,10) << endl;
     }
     
@@ -232,6 +236,7 @@ g(g), leftPlot(left), rightPlot(right) {
     // Initialise the stabilisation point to somewhere far away
     // on the imaginary axis
     stabilser = cpx(0, 1000);
+    stabiliserReverse = cpx(0, 1000);
     // Initialise the pixel matrix
     //pixelPos = generatePixelPos();
     // Initialise the times
@@ -253,23 +258,18 @@ bool SLEAnimate::nextFrame() {
             h = g.slitMap(*it);
             gridMaps.push_back(h);
             stabilser = h.inverse(stabilser);
+            stabiliserReverse = h(stabiliserReverse);
         }
         for (auto it = times.begin(); *it < nextTime; ++it) {
             h = g.slitMap(*it);
             pixelMaps.push_back(h);
         }
         
-        
         updateMatrixForward(gridMaps, horizontal, horizontal);
         updateMatrixForward(gridMaps, vertical, vertical);
         
+        updateMatrixReverse(pixelMaps, pxOriginal, pxNow);
         
-        //cout << pxOriginal.at<cpx>(10,10) << " " << pxNow.at<cpx>(10,10) << endl;
-        updateMatrixReverse(gridMaps, pxNow, pxNow);
-        //updateMatrixForward(gridMaps, pxNow, pxNow);
-        
-        //cout << pxOriginal.at<cpx>(10,10) << " " << pxNow.at<cpx>(10,10) << endl;
-        //cout << pxNow << endl;
         currentTime = nextTime;
         plot();
         return true;
