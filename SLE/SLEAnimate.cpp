@@ -25,8 +25,8 @@ void SLEAnimate::initialiseLeft(){
 }
 
 void SLEAnimate::drawLines(class plot& plot, cv::Mat_<cpx>& matrix, Mat& colours){
-    //double offset = -stabilser.real();
-    double offset = 0.0;
+    double offset = -stabilser.real();
+    //double offset = 0.0;
     int rows = matrix.rows;
     int cols = matrix.cols;
     for (int i=0; i<rows; ++i) {
@@ -132,7 +132,6 @@ Vec3b SLEAnimate::cpxToColour(cpx z, bool shader) {
 
 Mat SLEAnimate::generateColours(Mat_<cpx>& points, bool shader) {
     Mat result = Mat::Mat(points.rows, points.cols, CV_8UC3, Scalar(255,255,255));
-    double offset = -stabilser.real();
     for (int i = 0; i < points.rows; ++i){
         for (int j = 0; j < points.cols; ++j) {
             result.at<Vec3b>(i,j) = cpxToColour(points.at<cpx>(i,j), shader);
@@ -268,7 +267,10 @@ bool SLEAnimate::nextFrame() {
         updateMatrixForward(gridMaps, horizontal, horizontal);
         updateMatrixForward(gridMaps, vertical, vertical);
         
-        updateMatrixReverse(pixelMaps, pxOriginal, pxNow);
+        double offset = -stabilser.real();
+        Mat_<cpx> pxOffset = pxOriginal - offset;
+        
+        updateMatrixReverse(pixelMaps, pxOffset, pxNow);
         
         currentTime = nextTime;
         plot();
