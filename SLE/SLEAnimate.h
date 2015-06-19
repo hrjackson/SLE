@@ -14,7 +14,6 @@
 #include <complex>
 #include <set>
 
-#include "CUDAfunctions.h"
 #include "sle_process.h"
 #include "plot.h"
 
@@ -26,17 +25,27 @@ typedef complex<double> cpx;
 class SLEAnimate {
 private:
     // Line matrices
-    cv::Mat_<cpx> horizontal;
+    cpx* horizontal;
+    int horizontalRows;
+    int horizontalCols;
+    //cv::Mat_<cpx> horizontal;
     cv::Mat hzColour;
-    cv::Mat_<cpx> vertical;
+    cpx* vertical;
+    int verticalRows;
+    int verticalCols;
+    //cv::Mat_<cpx> vertical;
     cv::Mat vtColour;
 	// Height the lines in the grid go up to
     double lineHeight;
 	// Width the lines in the grid go out to, dist from centre
     double lineWidth;
     // Background matrices
-    cv::Mat_<cpx> pxOriginal;
-    cv::Mat_<cpx> pxNow;
+    cpx* pxOriginal;
+    int pxOriginalRows;
+    int pxOriginalCols;
+    cpx* pxNow;
+    //cv::Mat_<cpx> pxOriginal;
+    //cv::Mat_<cpx> pxNow;
     // Colour matrices
     cv::Mat dark;
     int darkRows;
@@ -59,30 +68,52 @@ private:
     plot &leftPlot;
     plot &rightPlot;
 	/*---- Private functions ----*/
-    cv::Mat_<cpx> generateHorizontal();
-    cv::Mat_<cpx> generateVertical();
+    cpx* generateHorizontal();
+    cpx* generateVertical();
     //cv::Mat_<cpx> generatePixelPos();
     void initialiseLeft();
     // Convert a complex number in the "colour patch" to its
     // corresponding colour
     Vec3b cpxToColour(cpx z, bool shader);
     // Convert a whole matrix of points to their corresponding colours
-    Mat generateColours(Mat_<cpx>& points, bool shader);
+    Mat generateColours(cpx* points, int pointsRows, int pointsCols, bool shader);
     // Draw lines corresponding to ROWS in the matrix.
-    void drawLines(plot& plot, cv::Mat_<cpx>& matrix, Mat& colours);
-    void drawColours(plot& plot, Mat_<cpx>& points);
+    void drawLines(plot& plot,
+                   cpx* matrix,
+                   int matrixRows,
+                   int matrixCols,
+                   Mat& colours);
+    void drawLinesTranspose(plot& plot,
+                   cpx* matrix,
+                   int matrixRows,
+                   int matrixCols,
+                   Mat& colours);
+    void drawColours(plot& plot,
+                     cpx* points,
+                     int pointsRows,
+                     int pointsCols);
     void updateMatrixForward(SlitMap& h,
-                             Mat_<cpx>& inMat,
-                             Mat_<cpx>& outMat);
+                             cpx* inMat,
+                             cpx* outMat,
+                             int rows,
+                             int cols);
     void updateMatrixForward(vector<SlitMap>& h,
-                             Mat_<cpx>& inMat,
-                             Mat_<cpx>& outMat);
+                             cpx* inMat,
+                             cpx* outMat,
+                             int rows,
+                             int cols);
     void updateMatrixReverse(SlitMap& h,
-                             Mat_<cpx>& inMat,
-                             Mat_<cpx>& outMat);
+                             double offset,
+                             cpx* inMat,
+                             cpx* outMat,
+                             int rows,
+                             int cols);
     void updateMatrixReverse(vector<SlitMap>& h,
-                             Mat_<cpx>& inMat,
-                             Mat_<cpx>& outMat);
+                             double offset,
+                             cpx* inMat,
+                             cpx* outMat,
+                             int rows,
+                             int cols);
     void plot();
 public:
     SLEAnimate(double gridRes,

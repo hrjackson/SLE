@@ -130,15 +130,25 @@ void plot::colour(int row, int col, Vec3b colour){
     image.at<Vec3b>(row,col) = colour;
 }
 
-Mat_<cpx> plot::points(){
+cpx* plot::points(){
     int W = width;
     int H = (1-border)*height;
-	Mat_<cpx> result(H, W);
+	cpx* result = new cpx [H*W];
     for (int i = 0; i < H; ++i) {
         for (int j = 0; j < W; ++j) {
-            result.at<cpx>(i,j) = CVTocpx(Point(j,i));
+            result[i*W + j] = CVTocpx(Point(j,i));
         }
     }
     
     return result;
 }
+
+int plot::pointsRows(){
+    return (int)( (1-border)*height );
+}
+
+int plot::pointsCols(){
+    return (int)width;
+}
+
+
