@@ -348,6 +348,13 @@ void SLEAnimate::output(int frame) {
     rightPlot.output(rtName.c_str());
 }
 
+SLEAnimate::~SLEAnimate(){
+    delete[] horizontal;
+    delete[] vertical;
+    delete [] pxOriginal;
+    delete[] pxNow;
+}
+
 
 
 

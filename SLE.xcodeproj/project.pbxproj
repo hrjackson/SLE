@@ -15,6 +15,7 @@
 		BA1463CC1AE92A230001E0A0 /* SLEAnimate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BAD952491AE8190B00B47D45 /* SLEAnimate.cpp */; };
 		BA328A131ABAF67500BD56DA /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BA328A121ABAF67500BD56DA /* main.cpp */; };
 		BA328A1A1ABAF94800BD56DA /* ProcessTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BA328A181ABAF94800BD56DA /* ProcessTest.cpp */; };
+		BA7CAF8E1B3462860075EDE8 /* CUDAfunctions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BA7CAF8C1B3462860075EDE8 /* CUDAfunctions.cpp */; };
 		BA8911DB1AC88A0300E98779 /* plot.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BA8911D91AC88A0300E98779 /* plot.cpp */; };
 		BA89C19E1A8A579100465451 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BA89C19D1A8A579100465451 /* main.cpp */; };
 		BAA910CC1AC07934000B8DFE /* SLETest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BAA910CB1AC07934000B8DFE /* SLETest.cpp */; };
@@ -48,6 +49,8 @@
 		BA328A121ABAF67500BD56DA /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		BA328A171ABAF6B500BD56DA /* catch.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = catch.hpp; sourceTree = "<group>"; };
 		BA328A181ABAF94800BD56DA /* ProcessTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ProcessTest.cpp; sourceTree = "<group>"; };
+		BA7CAF8C1B3462860075EDE8 /* CUDAfunctions.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CUDAfunctions.cpp; sourceTree = "<group>"; };
+		BA7CAF8D1B3462860075EDE8 /* CUDAfunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CUDAfunctions.h; sourceTree = "<group>"; };
 		BA87FDD61ABC5903008DFF30 /* sle_process.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sle_process.cpp; sourceTree = "<group>"; };
 		BA87FDD71ABC5903008DFF30 /* sle_process.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sle_process.h; sourceTree = "<group>"; };
 		BA8911D91AC88A0300E98779 /* plot.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = plot.cpp; sourceTree = "<group>"; };
@@ -121,6 +124,8 @@
 				BA87FDD61ABC5903008DFF30 /* sle_process.cpp */,
 				BA87FDD71ABC5903008DFF30 /* sle_process.h */,
 				BAD952491AE8190B00B47D45 /* SLEAnimate.cpp */,
+				BA7CAF8C1B3462860075EDE8 /* CUDAfunctions.cpp */,
+				BA7CAF8D1B3462860075EDE8 /* CUDAfunctions.h */,
 				BAD9524A1AE8190B00B47D45 /* SLEAnimate.h */,
 			);
 			path = SLE;
@@ -218,6 +223,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BA7CAF8E1B3462860075EDE8 /* CUDAfunctions.cpp in Sources */,
 				BA8911DB1AC88A0300E98779 /* plot.cpp in Sources */,
 				BA1463C71AE9252C0001E0A0 /* stochastic_processes.cpp in Sources */,
 				BA1463C91AE9253C0001E0A0 /* sle_process.cpp in Sources */,

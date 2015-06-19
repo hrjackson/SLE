@@ -24,6 +24,10 @@ typedef complex<double> cpx;
 
 class SLEAnimate {
 private:
+    /*--- CUDA data ---*/
+    
+    
+    /*--- general data ---*/
     // Line matrices
     cpx* horizontal;
     int horizontalRows;
@@ -124,6 +128,7 @@ public:
     void show();
     void output(int frame);
 	void plotForward();
+    ~SLEAnimate();
 };
 
 #endif /* defined(__SLE__SLEAnimate__) */
