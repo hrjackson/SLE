@@ -300,3 +300,19 @@ SlitMap SLE::slitMap(double time) {
 double SLE::drivingFunction(double time) {
     return (*b)(time)[0]*sqrt(kappa);
 }
+
+vector<double> SLE::times(){
+    vector<double> result;
+    for (auto it = h.begin(); it != h.end(); ++it) {
+        result.push_back((it->second).getDt());
+    }
+    return result;
+}
+
+vector<double> SLE::shifts(){
+    vector<double> result;
+    for (auto it = h.begin(); it != h.end(); ++it) {
+        result.push_back((it->second).getOffset());
+    }
+    return result;
+}

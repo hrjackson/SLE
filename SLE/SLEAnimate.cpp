@@ -247,6 +247,10 @@ SLEAnimate::SLEAnimate(double gridRes,
                        class plot& right)
 :gridRes(gridRes), gridSpacing(gridSpacing),
 g(g), leftPlot(left), rightPlot(right) {
+    /*--- Initialise CUDA data ---*/
+    dt = &(g.times())[0];
+    shifts = &(g.shifts())[0];
+    
     // Import the colour matrices
     //dark = imread("D:\\sleOutput\\col\\dark.png", CV_LOAD_IMAGE_COLOR);
     dark = imread("/Users/Henry/tmp/colours/dark.png", CV_LOAD_IMAGE_COLOR);

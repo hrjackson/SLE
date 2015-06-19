@@ -25,7 +25,8 @@ typedef complex<double> cpx;
 class SLEAnimate {
 private:
     /*--- CUDA data ---*/
-    
+    double* dt;
+    double* shifts;
     
     /*--- general data ---*/
     // Line matrices
