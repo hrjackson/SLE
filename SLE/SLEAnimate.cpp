@@ -153,8 +153,12 @@ void SLEAnimate::updateMatrixForward(SlitMap& h,
 void SLEAnimate::updateMatrixForward(vector<SlitMap>& h,
                                      Mat_<cpx>& inMat,
                                      Mat_<cpx>& outMat){
-    for (auto it = h.begin(); it != h.end(); ++it) {
-        updateMatrixForward(*it, inMat, outMat);
+	auto it = h.begin();
+	updateMatrixReverse(*it, inMat, outMat);
+	++it;
+    while (it != h.end()) {
+        updateMatrixForward(*it, outMat, outMat);
+		++it;
     }
     
 }
@@ -172,6 +176,14 @@ void SLEAnimate::updateMatrixReverse(SlitMap& h,
 void SLEAnimate::updateMatrixReverse(vector<SlitMap>& h,
                                      Mat_<cpx>& inMat,
                                      Mat_<cpx>& outMat){
+	vector<double> dt;
+	vector<double> offset;
+	for (auto it = h.begin(); it != h.end(); ++it)
+	{
+		dt.push_back((*it).getDt());
+		offset.push_back((*it).getOffset);
+	}
+
     auto it = h.rbegin();
     updateMatrixReverse(*it, inMat, outMat);
     ++it;
@@ -211,9 +223,10 @@ SLEAnimate::SLEAnimate(double gridRes,
 :gridRes(gridRes), gridSpacing(gridSpacing),
 g(g), leftPlot(left), rightPlot(right) {
     // Import the colour matrices
-    //dark = imread("D:\\sleOutput\\col\\dark.png", CV_LOAD_IMAGE_COLOR);
-    dark = imread("/Users/Henry/tmp/colours/dark.png", CV_LOAD_IMAGE_COLOR);
-    light = imread("/Users/Henry/tmp/colours/light.png", CV_LOAD_IMAGE_COLOR);
+    dark = imread("D:\\sleOutput\\col\\dark.png", CV_LOAD_IMAGE_COLOR);
+    //dark = imread("/Users/Henry/tmp/colours/dark.png", CV_LOAD_IMAGE_COLOR);
+	light = imread("D:\\sleOutput\\col\\light.png", CV_LOAD_IMAGE_COLOR);
+    //light = imread("/Users/Henry/tmp/colours/light.png", CV_LOAD_IMAGE_COLOR);
     darkRows = dark.rows;
     darkCols = dark.cols;
     lightRows = light.rows;
@@ -290,10 +303,10 @@ void SLEAnimate::show() {
 void SLEAnimate::output(int frame) {
 
     // Set up filenames
-    //std::string strLeft = "D:\\sleOutput\\left\\";
-    //std::string strRight = "D:\\sleOutput\\right\\";
-    std::string strLeft = "/Users/henry/tmp/left/";
-    std::string strRight = "/Users/henry/tmp/right/";
+    std::string strLeft = "D:\\sleOutput\\left\\";
+    std::string strRight = "D:\\sleOutput\\right\\";
+    //std::string strLeft = "/Users/henry/tmp/left/";
+    //std::string strRight = "/Users/henry/tmp/right/";
     std::string ltName;
     std::string rtName;
     std::stringstream ss;

@@ -30,6 +30,9 @@
     <ClCompile Include="stochastic_processes.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="CUDAfunctions.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="plot.h">
@@ -42,6 +45,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="stochastic_processes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CUDAfunctions.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

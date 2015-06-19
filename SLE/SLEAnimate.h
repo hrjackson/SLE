@@ -14,6 +14,7 @@
 #include <complex>
 #include <set>
 
+#include "CUDAfunctions.h"
 #include "sle_process.h"
 #include "plot.h"
 
