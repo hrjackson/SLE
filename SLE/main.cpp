@@ -33,8 +33,8 @@ int main(int argc, const char * argv[]) {
     double dtMin = 0.001;
     int numFrames = 36;
     
-    int width =  2880/10;
-    int height = 1800/10;
+    int width =  2880;
+    int height = 1800;
     int scale = height/2;
     double border = 0.03;
     
