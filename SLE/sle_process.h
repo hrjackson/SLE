@@ -85,8 +85,9 @@ public:
     std::vector<std::complex<double>> reverseLine(double time);
     SlitMap slitMap(double time);
     double drivingFunction(double time);
-    vector<double> times();
-    vector<double> shifts();
+    // Returns pointers to arrays of times and shifts.
+    double* times();
+    double* shifts();
 };
 
 #endif /* defined(__SLE__sle_process__) */

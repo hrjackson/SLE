@@ -166,6 +166,60 @@ Mat SLEAnimate::generateColours(cpx* points,
     return result;
 }
 
+void SLEAnimate::updateMatrixForward(int start, int end,
+                                     cpx* inMat,
+                                     cpx* outMat,
+                                     int rows,
+                                     int cols){
+    for (int i = 0; i < rows; ++i) {
+        for (int j = 0; j < cols; ++j) {
+            updateValueForward(start, end, inMat[i*cols + j], outMat[i*cols + j]);
+        }
+    }
+}
+
+void SLEAnimate::updateValueForward(int start, int end,
+                        cpx inValue,
+                        cpx& outValue){
+    outValue = slitMapInverse(start, inValue);
+    for (int i = start + 1; i < end; ++i) {
+        outValue = slitMapInverse(i, outValue);
+    }
+}
+
+cpx SLEAnimate::slitMapInverse(int index, cpx inValue){
+    //cout << shifts[index] << " " << dt[index] << endl;
+    cpx outValue = sqrt( -(inValue - shifts[index])*(inValue - shifts[index]) - 4*dt[index]) * cpx(0,1);
+    return outValue;
+}
+
+void SLEAnimate::updateMatrixReverse(int start, int end,
+                                     double offset,
+                                     cpx* inMat,
+                                     cpx* outMat,
+                                     int rows,
+                                     int cols){
+    for (int i = 0; i < rows; ++i) {
+        for (int j = 0; j < cols; ++j) {
+            updateValueReverse(start, end, offset, inMat[i*cols + j], outMat[i*cols + j]);
+        }
+    }
+}
+
+void SLEAnimate::updateValueReverse(int start, int end,
+                                    double offset,
+                                    cpx inValue,
+                                    cpx& outValue){
+    outValue = slitMap(end-1, inValue - offset);
+    for (int i = end-2; i >= start; --i) {
+        outValue = slitMap(i, outValue);
+    }
+}
+
+cpx SLEAnimate::slitMap(int index, cpx inValue){
+    return sqrt(4*dt[index] - inValue*inValue)*cpx(0,1) + shifts[index];
+}
+
 void SLEAnimate::updateMatrixForward(SlitMap& h,
                                      cpx* inMat,
                                      cpx* outMat,
@@ -248,8 +302,8 @@ SLEAnimate::SLEAnimate(double gridRes,
 :gridRes(gridRes), gridSpacing(gridSpacing),
 g(g), leftPlot(left), rightPlot(right) {
     /*--- Initialise CUDA data ---*/
-    dt = &(g.times())[0];
-    shifts = &(g.shifts())[0];
+    dt = g.times();
+    shifts = g.shifts();
     
     // Import the colour matrices
     //dark = imread("D:\\sleOutput\\col\\dark.png", CV_LOAD_IMAGE_COLOR);
@@ -273,7 +327,6 @@ g(g), leftPlot(left), rightPlot(right) {
     pxOriginal = leftPlot.points();
     pxOriginalRows = leftPlot.pointsRows();
     pxOriginalCols = leftPlot.pointsCols();
-    //cout << pxOriginal << endl;
     pxNow = leftPlot.points();
     
     // Initialise the stabilisation point to somewhere far away
@@ -296,24 +349,48 @@ bool SLEAnimate::nextFrame() {
         double nextTime = *nextTimePtr;
         vector<SlitMap> gridMaps;
         vector<SlitMap> pixelMaps;
+        auto start = times.begin();
+        auto lower = times.lower_bound(currentTime);
+        auto upper = times.lower_bound(nextTime);
+        int gridStart = (int)distance(start, lower);
+        int end = (int)distance(start, upper);
+        
+        //updateMatrixForward(gridStart, end,
+        //                    horizontal,
+        //                    horizontal,
+        //                    horizontalRows,
+        //                    horizontalCols);
+        //updateMatrixForward(gridStart, end,
+        //                    vertical,
+        //                    vertical,
+        //                    verticalRows,
+        //                    verticalCols);
+        
         SlitMap h = g.slitMap(0);
         for (auto it = times.lower_bound(currentTime); *it < nextTime; ++it) {
             h = g.slitMap(*it);
             gridMaps.push_back(h);
             stabilser = h.inverse(stabilser);
             stabiliserReverse = h(stabiliserReverse);
+            //cout << "h dt " << h.getDt() << " h dx " << h.getOffset() << endl;
+            //cout << "a dt " << dt[i] << " a dx " << shifts[i] << endl;
         }
+        
+        cout << "Vector length: " << gridMaps.size() << endl;
+        
         for (auto it = times.begin(); *it < nextTime; ++it) {
             h = g.slitMap(*it);
             pixelMaps.push_back(h);
         }
         
-        updateMatrixForward(gridMaps, horizontal, horizontal, horizontalRows, horizontalCols);
-        updateMatrixForward(gridMaps, vertical, vertical, horizontalRows, horizontalCols);
+        //updateMatrixForward(gridMaps, horizontal, horizontal, horizontalRows, horizontalCols);
+        //updateMatrixForward(gridMaps, vertical, vertical, horizontalRows, horizontalCols);
         
         double offset = -stabilser.real();
         
-        updateMatrixReverse(pixelMaps, offset, pxOriginal, pxNow, pxOriginalRows, pxOriginalCols);
+        //updateMatrixReverse(pixelMaps, offset, pxOriginal, pxNow, pxOriginalRows, pxOriginalCols);
+        
+        //updateMatrixReverse(0, end, offset, pxOriginal, pxNow, pxOriginalRows, pxOriginalCols);
         
         currentTime = nextTime;
         plot();

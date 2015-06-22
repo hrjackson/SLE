@@ -301,18 +301,22 @@ double SLE::drivingFunction(double time) {
     return (*b)(time)[0]*sqrt(kappa);
 }
 
-vector<double> SLE::times(){
-    vector<double> result;
+double* SLE::times(){
+    int n = (int)h.size();
+    double* result = new double [n];
+    int i = 0;
     for (auto it = h.begin(); it != h.end(); ++it) {
-        result.push_back((it->second).getDt());
+        result[i++] = ((it->second).getDt());
     }
     return result;
 }
 
-vector<double> SLE::shifts(){
-    vector<double> result;
+double* SLE::shifts(){
+    int n = (int)h.size();
+    double* result = new double [n];
+    int i = 0;
     for (auto it = h.begin(); it != h.end(); ++it) {
-        result.push_back((it->second).getOffset());
+        result[i++] = ((it->second).getOffset());
     }
     return result;
 }

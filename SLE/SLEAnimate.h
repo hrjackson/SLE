@@ -10,6 +10,7 @@
 #define __SLE__SLEAnimate__
 
 #include <stdio.h>
+#include <iterator>
 #include <vector>
 #include <complex>
 #include <set>
@@ -97,6 +98,16 @@ private:
                      cpx* points,
                      int pointsRows,
                      int pointsCols);
+    void updateMatrixForward(int start, int end,
+                             cpx* inMat,
+                             cpx* outMat,
+                             int rows,
+                             int cols);
+    void updateValueForward(int start, int end,
+                            cpx inValue,
+                            cpx& outValue);
+    cpx slitMapInverse(int index, cpx inValue);
+    
     void updateMatrixForward(SlitMap& h,
                              cpx* inMat,
                              cpx* outMat,
@@ -107,6 +118,20 @@ private:
                              cpx* outMat,
                              int rows,
                              int cols);
+    
+    void updateMatrixReverse(int start, int end,
+                             double offset,
+                             cpx* inMat,
+                             cpx* outMat,
+                             int rows,
+                             int cols);
+    void updateValueReverse(int start, int end,
+                            double offset,
+                            cpx inValue,
+                            cpx& outValue);
+    cpx slitMap(int index, cpx inValue);
+    
+    
     void updateMatrixReverse(SlitMap& h,
                              double offset,
                              cpx* inMat,
