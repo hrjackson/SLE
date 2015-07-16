@@ -14,7 +14,7 @@
 #include "stochastic_processes.h"
 #include "sle_process.h"
 #include "plot.h"
-#include "SLEAnimate.h"
+#include "SLEAnimate.cuh"
 
 #include <opencv2/core.hpp>
 #include <opencv2/highgui.hpp>
@@ -24,22 +24,23 @@
 using namespace std;
 using namespace cv;
 
+
 int main(int argc, const char * argv[]) {
     // Parameters
     
 	vector<double> kappa = { 2 };
     double t_end = 0.99;
-    double tolerance = 0.001;
-    double dtMin = 0;
-    int numFrames = 2;
+    double tolerance = 0.01;
+    double dtMin = 0.0;
+    int numFrames = 1800;
     
     int width =  2880;
     int height = 1800;
     int scale = height/2;
     double border = 0.03;
     
-    double gridRes = 0.01;
-    double gridSpacing = 0.05;
+    double gridRes = 0.001;
+    double gridSpacing = 0.20;
     
     //plot p(width, height, scale, border);
     //cout << p.points() << endl;

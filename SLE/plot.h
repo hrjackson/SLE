@@ -12,6 +12,7 @@
 #include <stdio.h>
 #include <vector>
 #include <complex>
+#include <thrust/complex.h>
 #include <string>
 #include <sstream>
 #include <iomanip>
@@ -23,7 +24,7 @@
 using namespace cv;
 using namespace std;
 
-typedef std::complex<double> cpx;
+typedef thrust::complex<double> cpx;
 
 class plot{
 private:

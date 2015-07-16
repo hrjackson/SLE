@@ -14,21 +14,30 @@
 #include <vector>
 #include <complex>
 #include <set>
+#include <thrust/complex.h>
 
+#include "CUDAFunctions.cuh"
 #include "sle_process.h"
 #include "plot.h"
 
 using namespace std;
 using namespace cv;
 
-typedef complex<double> cpx;
+typedef thrust::complex<double> cpx;
 
 class SLEAnimate {
 private:
     /*--- CUDA data ---*/
+	int numMaps;
     double* dt;
+	double* dtDevice;
     double* shifts;
-    
+	double* shiftsDevice;
+	cpx* horizontalDevice;
+	cpx* verticalDevice;
+	cpx* pxOriginalDevice;
+	cpx* pxNowDevice;
+
     /*--- general data ---*/
     // Line matrices
     cpx* horizontal;
@@ -101,6 +110,7 @@ private:
     void updateMatrixForward(int start, int end,
                              cpx* inMat,
                              cpx* outMat,
+							 cpx* outMatHost,
                              int rows,
                              int cols);
     void updateValueForward(int start, int end,
@@ -113,18 +123,15 @@ private:
                              cpx* outMat,
                              int rows,
                              int cols);
-    void updateMatrixForward(vector<SlitMap>& h,
-                             cpx* inMat,
-                             cpx* outMat,
-                             int rows,
-                             int cols);
     
     void updateMatrixReverse(int start, int end,
                              double offset,
                              cpx* inMat,
                              cpx* outMat,
+							 cpx* outMatHost,
                              int rows,
                              int cols);
+
     void updateValueReverse(int start, int end,
                             double offset,
                             cpx inValue,
@@ -138,12 +145,7 @@ private:
                              cpx* outMat,
                              int rows,
                              int cols);
-    void updateMatrixReverse(vector<SlitMap>& h,
-                             double offset,
-                             cpx* inMat,
-                             cpx* outMat,
-                             int rows,
-                             int cols);
+
     void plot();
 public:
     SLEAnimate(double gridRes,

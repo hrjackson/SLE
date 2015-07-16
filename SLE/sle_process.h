@@ -13,27 +13,26 @@
 #include <vector>
 #include <set>
 #include <complex>
+#include <thrust/complex.h>
 #include <map>
 #include "stochastic_processes.h"
 
 using namespace std;
-typedef complex<double> cpx;
+typedef thrust::complex<double> cpx;
 
 class SlitMap {
 private:
     double dt;
     double offset;
-    std::complex<double> mySqrt(std::complex<double> z);
+    cpx mySqrt(cpx z);
 public:
     SlitMap(double dt, double offset);
     SlitMap();
-    std::complex<double> operator()(std::complex<double> z);
-    std::complex<double> inverse(std::complex<double> w);
+    cpx operator()(cpx z);
+    cpx inverse(cpx w);
     void update(double offset, double dt);
     double getOffset();
     double getDt();
-    std::complex<double> old(cpx z);
-    cpx inverseOld(cpx z);
 };
 
 
@@ -43,17 +42,17 @@ private:
     BrownianMotion* b;
     double kappa;
     std::map<double, SlitMap> h;
-    std::map<double, std::complex<double>> z;
+    std::map<double, cpx> z;
     int numFrames;
     // A vector of times which are guaranteed to be hit by adaptive process
     std::vector<double> admissibleTimes;
     /*---- Functions ----*/
     double angle(double t, double tOld);
-    std::complex<double> pointEval(std::complex<double> z);
+    cpx pointEval(cpx z);
     void singleUpdate(double dt,
                       double& t,
                       SlitMap& candH,
-                      std::complex<double>& candZ,
+                      cpx& candZ,
                       double& moved,
                       double& slitSize);
     std::vector<double> findAdmissibleTimes(double t_end);
@@ -63,7 +62,7 @@ private:
                            double tolerance,
                            double dtMin,
                            SlitMap& candH,
-                           std::complex<double>& candZ);
+                           cpx& candZ);
 public:
     SLE(BrownianMotion* b,
         double kappa,
@@ -72,17 +71,18 @@ public:
         double dtMin,
         int numFrames);
     double operator()(double time, std::vector<double> point);
+	int numMaps();
     std::vector<double> getTimes();
     std::set<double> getOrderedTimes();
     std::vector<double> FrameTimes();
     std::set<double> orderedFrameTimes();
     std::vector<double> getTimesFromZ();
-    std::vector<std::complex<double>> getCurve();
-    std::complex<double> forwardPoint(double time, std::complex<double> z);
-    std::complex<double> reversePoint(double start, double time, std::complex<double> z);
-    std::vector<std::complex<double>> forwardLine(double time);
-    std::vector<std::complex<double>> forwardLine(double tStart, double tEnd);
-    std::vector<std::complex<double>> reverseLine(double time);
+    std::vector<cpx> getCurve();
+    cpx forwardPoint(double time, cpx z);
+    cpx reversePoint(double start, double time, cpx z);
+    std::vector<cpx> forwardLine(double time);
+    std::vector<cpx> forwardLine(double tStart, double tEnd);
+    std::vector<cpx> reverseLine(double time);
     SlitMap slitMap(double time);
     double drivingFunction(double time);
     // Returns pointers to arrays of times and shifts.

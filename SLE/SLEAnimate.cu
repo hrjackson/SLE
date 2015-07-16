@@ -6,8 +6,22 @@
 //  Copyright (c) 2015 n/a. All rights reserved.
 //
 
-#include "SLEAnimate.h"
+#include "SLEAnimate.cuh"
 #include <iostream>
+
+#define TILE_WIDTH 32
+
+/*--- CUDA Error checking ---*/
+#define gpuErrchk(ans) { gpuAssert((ans), __FILE__, __LINE__); }
+inline void gpuAssert(cudaError_t code, const char *file, int line, bool abort = true)
+{
+	if (code != cudaSuccess)
+	{
+		fprintf(stderr, "GPUassert: %s %s %d\n", cudaGetErrorString(code), file, line);
+		if (abort) exit(code);
+	}
+}
+
 
 ////////////////////////////////////////////////////////////////////////////////
 //// SLEAnimate private member function definitions ////////////////////////////
@@ -169,13 +183,14 @@ Mat SLEAnimate::generateColours(cpx* points,
 void SLEAnimate::updateMatrixForward(int start, int end,
                                      cpx* inMat,
                                      cpx* outMat,
+									 cpx* outMatHost,
                                      int rows,
                                      int cols){
-    for (int i = 0; i < rows; ++i) {
-        for (int j = 0; j < cols; ++j) {
-            updateValueForward(start, end, inMat[i*cols + j], outMat[i*cols + j]);
-        }
-    }
+	dim3 dimGrid((cols - 1) / TILE_WIDTH + 1, (rows - 1) / TILE_WIDTH + 1, 1);
+	dim3 dimBlock(TILE_WIDTH, TILE_WIDTH, 1);
+	updateMatrixForwardGPU<<<dimGrid, dimBlock>>>(start, end, inMat, outMat, dtDevice, shiftsDevice, rows, cols);
+	gpuErrchk(cudaPeekAtLastError());
+	gpuErrchk(cudaMemcpy(outMatHost, outMat, rows*cols*sizeof(cpx), cudaMemcpyDeviceToHost));
 }
 
 void SLEAnimate::updateValueForward(int start, int end,
@@ -197,13 +212,15 @@ void SLEAnimate::updateMatrixReverse(int start, int end,
                                      double offset,
                                      cpx* inMat,
                                      cpx* outMat,
+									 cpx* outMatHost,
                                      int rows,
-                                     int cols){
-    for (int i = 0; i < rows; ++i) {
-        for (int j = 0; j < cols; ++j) {
-            updateValueReverse(start, end, offset, inMat[i*cols + j], outMat[i*cols + j]);
-        }
-    }
+                                     int cols)
+{
+	dim3 dimGrid( (cols-1)/TILE_WIDTH + 1, (rows-1)/TILE_WIDTH + 1, 1);
+	dim3 dimBlock(TILE_WIDTH, TILE_WIDTH, 1);
+	updateMatrixReverseGPU<<<dimGrid, dimBlock>>>(start, end, offset, inMat, outMat, dtDevice, shiftsDevice, rows, cols);
+	gpuErrchk(cudaPeekAtLastError());
+	cudaMemcpy(outMatHost, outMat, rows*cols*sizeof(cpx), cudaMemcpyDeviceToHost);
 }
 
 void SLEAnimate::updateValueReverse(int start, int end,
@@ -232,21 +249,6 @@ void SLEAnimate::updateMatrixForward(SlitMap& h,
     }
 }
 
-void SLEAnimate::updateMatrixForward(vector<SlitMap>& h,
-                                     cpx* inMat,
-                                     cpx* outMat,
-                                     int rows,
-                                     int cols){
-	auto it = h.begin();
-	updateMatrixForward(*it, inMat, outMat, rows, cols);
-	++it;
-    while (it != h.end()) {
-        updateMatrixForward(*it, outMat, outMat, rows, cols);
-		++it;
-    }
-    
-}
-
 void SLEAnimate::updateMatrixReverse(SlitMap& h,
                                      double offset,
                                      cpx* inMat,
@@ -258,23 +260,6 @@ void SLEAnimate::updateMatrixReverse(SlitMap& h,
             outMat[i*cols + j] = h(inMat[i*cols + j] - offset);
         }
     }
-}
-
-void SLEAnimate::updateMatrixReverse(vector<SlitMap>& h,
-                                     double offset,
-                                     cpx* inMat,
-                                     cpx* outMat,
-                                     int rows,
-                                     int cols){
-
-    auto it = h.rbegin();
-    updateMatrixReverse(*it, offset, inMat, outMat, rows, cols);
-    ++it;
-    while (it != h.rend()) {
-        updateMatrixReverse( *it, 0, outMat, outMat, rows, cols);
-        ++it;
-    }
-    
 }
 
 void SLEAnimate::plot() {
@@ -302,14 +287,22 @@ SLEAnimate::SLEAnimate(double gridRes,
 :gridRes(gridRes), gridSpacing(gridSpacing),
 g(g), leftPlot(left), rightPlot(right) {
     /*--- Initialise CUDA data ---*/
+	numMaps = g.numMaps();
+	int numBits = numMaps*sizeof(double);
     dt = g.times();
+
+	cudaMalloc((void**)&dtDevice, numBits);
+	cudaMemcpy(dtDevice, dt, numBits, cudaMemcpyHostToDevice);
+
     shifts = g.shifts();
+	cudaMalloc((void**)&shiftsDevice, numBits);
+	cudaMemcpy(shiftsDevice, shifts, numBits, cudaMemcpyHostToDevice);
     
     // Import the colour matrices
-    //dark = imread("D:\\sleOutput\\col\\dark.png", CV_LOAD_IMAGE_COLOR);
-    dark = imread("/Users/Henry/tmp/colours/dark.png", CV_LOAD_IMAGE_COLOR);
-	//light = imread("D:\\sleOutput\\col\\light.png", CV_LOAD_IMAGE_COLOR);
-    light = imread("/Users/Henry/tmp/colours/light.png", CV_LOAD_IMAGE_COLOR);
+    dark = imread("D:\\sleOutput\\col\\dark.png", CV_LOAD_IMAGE_COLOR);
+    //dark = imread("/Users/Henry/tmp/colours/dark.png", CV_LOAD_IMAGE_COLOR);
+	light = imread("D:\\sleOutput\\col\\light.png", CV_LOAD_IMAGE_COLOR);
+    //light = imread("/Users/Henry/tmp/colours/light.png", CV_LOAD_IMAGE_COLOR);
     darkRows = dark.rows;
     darkCols = dark.cols;
     lightRows = light.rows;
@@ -322,12 +315,29 @@ g(g), leftPlot(left), rightPlot(right) {
     hzColour = generateColours(horizontal, horizontalRows, horizontalCols, true);
     vertical = generateVertical();
     vtColour = generateColours(vertical, verticalRows, verticalCols, true);
+
+	// Copy line matrices to device
+	cudaMalloc((void**)&horizontalDevice, horizontalRows*horizontalCols*sizeof(cpx));
+	cudaMemcpy(horizontalDevice, horizontal, 
+		horizontalRows*horizontalCols*sizeof(cpx), cudaMemcpyHostToDevice);
+
+	cudaMalloc((void**)&verticalDevice, verticalRows*verticalCols*sizeof(cpx));
+	cudaMemcpy(verticalDevice, vertical,
+		verticalRows*verticalCols*sizeof(cpx), cudaMemcpyHostToDevice);
     
     // Initialise pixel position matrix
     pxOriginal = leftPlot.points();
     pxOriginalRows = leftPlot.pointsRows();
     pxOriginalCols = leftPlot.pointsCols();
     pxNow = leftPlot.points();
+
+	// Copy pixel matrices to device
+	cudaMalloc((void**)&pxOriginalDevice, pxOriginalRows*pxOriginalCols*sizeof(cpx));
+	cudaMemcpy(pxOriginalDevice, pxOriginal, 
+		pxOriginalRows*pxOriginalCols*sizeof(cpx), cudaMemcpyHostToDevice);
+	cudaMalloc((void**)&pxNowDevice, pxOriginalRows*pxOriginalCols*sizeof(cpx));
+	cudaMemcpy(pxNowDevice, pxNow,
+		pxOriginalRows*pxOriginalCols*sizeof(cpx), cudaMemcpyHostToDevice);
     
     // Initialise the stabilisation point to somewhere far away
     // on the imaginary axis
@@ -355,16 +365,18 @@ bool SLEAnimate::nextFrame() {
         int gridStart = (int)distance(start, lower);
         int end = (int)distance(start, upper);
         
-        //updateMatrixForward(gridStart, end,
-        //                    horizontal,
-        //                    horizontal,
-        //                    horizontalRows,
-        //                    horizontalCols);
-        //updateMatrixForward(gridStart, end,
-        //                    vertical,
-        //                    vertical,
-        //                    verticalRows,
-        //                    verticalCols);
+        updateMatrixForward(gridStart, end,
+                            horizontalDevice,
+                            horizontalDevice,
+							horizontal,
+                            horizontalRows,
+                            horizontalCols);
+        updateMatrixForward(gridStart, end,
+                            verticalDevice,
+                            verticalDevice,
+							vertical,
+                            verticalRows,
+                            verticalCols);
         
         SlitMap h = g.slitMap(0);
         for (auto it = times.lower_bound(currentTime); *it < nextTime; ++it) {
@@ -390,7 +402,7 @@ bool SLEAnimate::nextFrame() {
         
         //updateMatrixReverse(pixelMaps, offset, pxOriginal, pxNow, pxOriginalRows, pxOriginalCols);
         
-        //updateMatrixReverse(0, end, offset, pxOriginal, pxNow, pxOriginalRows, pxOriginalCols);
+        updateMatrixReverse(0, end, offset, pxOriginalDevice, pxNowDevice, pxNow, pxOriginalRows, pxOriginalCols);
         
         currentTime = nextTime;
         plot();
@@ -410,10 +422,10 @@ void SLEAnimate::show() {
 void SLEAnimate::output(int frame) {
 
     // Set up filenames
-    //std::string strLeft = "D:\\sleOutput\\left\\";
-    //std::string strRight = "D:\\sleOutput\\right\\";
-    std::string strLeft = "/Users/henry/tmp/left/";
-    std::string strRight = "/Users/henry/tmp/right/";
+    std::string strLeft = "D:\\sleOutput\\left\\";
+    std::string strRight = "D:\\sleOutput\\right\\";
+    //std::string strLeft = "/Users/henry/tmp/left/";
+    //std::string strRight = "/Users/henry/tmp/right/";
     std::string ltName;
     std::string rtName;
     std::stringstream ss;

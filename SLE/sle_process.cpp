@@ -11,16 +11,6 @@
 #include <iostream>
 #include <algorithm>
 
-std::complex<double> SlitMap::mySqrt(std::complex<double> z){
-    double theta = std::arg(z);
-    double r = std::abs(z);
-    if (theta < 0) {
-        theta = 2*3.1415926 + theta;
-    }
-    return std::polar(sqrt(r), theta/2);
-}
-
-
 
 /*//////////////////////////////////////////////////////////////////////////////
 //// SlitMap member functions //////////////////////////////////////////////////
@@ -36,26 +26,12 @@ SlitMap::SlitMap(){
     std::cout << "REALLY shouldn't be needing the default constructor!" << std::endl;
 }
 
-std::complex<double> SlitMap::operator()(std::complex<double> z){
+cpx SlitMap::operator()(cpx z){
     return sqrt(4*dt - z*z)*cpx(0,1) + offset;
 }
 
-std::complex<double> SlitMap::old(std::complex<double> z){
-    std::complex<double> result = mySqrt( z*z - 4*dt ) + offset;
-    return result;
-}
-
-std::complex<double> SlitMap::inverse(std::complex<double> w){
-    std::complex<double> result = sqrt( -(w - offset)*(w-offset) - 4*dt )*cpx(0,1);
-    return result;
-}
-
-std::complex<double> SlitMap::inverseOld(std::complex<double> w){
-    // Built in sqrt function has branch cut on negative real axis.
-    // We want it on positive real axis, so have to do it by hand.
-    std::complex<double> tmp = w-offset;
-    std::complex<double> resultSq = tmp*tmp + 4*dt;
-    std::complex<double> result = mySqrt(resultSq);
+cpx SlitMap::inverse(cpx w){
+    cpx result = sqrt( -(w - offset)*(w-offset) - 4*dt )*cpx(0,1);
     return result;
 }
 
@@ -92,8 +68,8 @@ double SLE::angle(double t, double tOld){
     return alpha;
 };
 
-std::complex<double> SLE::pointEval(std::complex<double> z){
-    std::complex<double> result = z;
+cpx SLE::pointEval(cpx z){
+    cpx result = z;
     for (auto rit = h.rbegin(); rit!= h.rend(); rit++) {
         result = (rit->second)(result);
     }
@@ -103,7 +79,7 @@ std::complex<double> SLE::pointEval(std::complex<double> z){
 void SLE::singleUpdate(double dt,
                        double& t,
                        SlitMap& candH,
-                       std::complex<double>& candZ,
+                       cpx& candZ,
                        double& moved,
                        double& slitSize){
     //double alpha = angle(t+dt, t);
@@ -126,7 +102,7 @@ std::vector<double> SLE::findAdmissibleTimes(double t_end){
 
 void SLE::constructProcess(double t_end, double tolerance, double dtMin){
     SlitMap candH(0, 0);
-    std::complex<double> candZ;
+    cpx candZ;
     
     for (auto it = admissibleTimes.begin()+1; it != admissibleTimes.end(); ++it) {
         adaptiveIncrement(*(it-1), *it, tolerance, dtMin, candH, candZ);
@@ -138,7 +114,7 @@ void SLE::adaptiveIncrement(double t_start,
                             double tolerance,
                             double dtMin,
                             SlitMap& candH,
-                            std::complex<double>& candZ){
+                            cpx& candZ){
     double t = t_start;
     double dt = 1;
     double moved;
@@ -172,7 +148,7 @@ void SLE::adaptiveIncrement(double t_start,
             t = t+dt;
         }
         h.insert(std::pair<double, SlitMap>{t, candH});
-        z.insert(std::pair<double, std::complex<double>>{t, candZ});
+        z.insert(std::pair<double, cpx>{t, candZ});
         std::cout << t << std::fixed << std::endl;
         
         // Speed up if we get too slow
@@ -200,9 +176,13 @@ SLE::SLE(BrownianMotion* b,
     // Initialise maps
     SlitMap id(0, 0);
     h.insert(std::pair<double, SlitMap>(0.0, id));
-    z.insert(std::pair<double, std::complex<double> >(0.0, std::complex<double>(0.0, 0.0)));
+    z.insert(std::pair<double, cpx >(0.0, cpx(0.0, 0.0)));
     
     constructProcess(t_end, tolerance, dtMin);
+}
+
+int SLE::numMaps(){
+	return (int)h.size();
 }
 
 std::vector<double> SLE::getTimes(){
@@ -241,16 +221,16 @@ std::vector<double> SLE::getTimesFromZ(){
     return result;
 }
 
-std::vector<std::complex<double>> SLE::getCurve(){
-    std::vector<std::complex<double>> result;
+std::vector<cpx> SLE::getCurve(){
+    std::vector<cpx> result;
     for (auto it = z.begin(); it!=z.end(); it++) {
         result.push_back(it->second);
     }
     return result;
 }
 
-std::complex<double> SLE::forwardPoint(double time, std::complex<double> z){
-    std::complex<double> result = z;
+cpx SLE::forwardPoint(double time, cpx z){
+    cpx result = z;
     for (auto rit = h.rbegin(); rit != h.rend(); ++rit) {
         if ((rit->first) <= time) {
             result = (rit->second)(result);
@@ -259,8 +239,8 @@ std::complex<double> SLE::forwardPoint(double time, std::complex<double> z){
     return result;
 }
 
-std::complex<double> SLE::reversePoint(double start, double time, std::complex<double> z){
-    std::complex<double> result = z;
+cpx SLE::reversePoint(double start, double time, cpx z){
+    cpx result = z;
     //double t_end = h.rbegin()->first;
     for (auto it = h.lower_bound(time); it != h.lower_bound(start); --it) {
         result = (it->second)(result);
@@ -268,20 +248,20 @@ std::complex<double> SLE::reversePoint(double start, double time, std::complex<d
     return result;
 }
 
-std::vector<std::complex<double>> SLE::forwardLine(double time){
+std::vector<cpx> SLE::forwardLine(double time){
     return forwardLine(0.0, time);
 }
 
-std::vector<std::complex<double>> SLE::forwardLine(double tStart, double tEnd){
-    std::vector<std::complex<double>> result;
+std::vector<cpx> SLE::forwardLine(double tStart, double tEnd){
+    std::vector<cpx> result;
     for (auto it = z.lower_bound(tStart); it != z.upper_bound(tEnd); ++it) {
         result.push_back(it->second);
     }
     return result;
 }
 
-std::vector<std::complex<double>> SLE::reverseLine(double time){
-    std::vector<std::complex<double>> result;
+std::vector<cpx> SLE::reverseLine(double time){
+    std::vector<cpx> result;
     double t_end = h.rbegin()->first;
     for (auto it = h.lower_bound(t_end - time); it!=h.end(); ++it) {
         result.push_back(reversePoint(t_end - time, it->first, 0));

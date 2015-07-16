@@ -33,14 +33,16 @@ plot::~plot(){
 }
 
 void plot::drawLine(cpx point, Scalar colour) {
-    Point endPoint = cpxToCV(point);
-    line(image,
-         currentPosition,
-         endPoint,
-         colour,
-         2,
-         CV_AA);
-    currentPosition = endPoint;
+	Point endPoint = cpxToCV(point);
+	//if (point.imag() > 0.005 && currentPosition.y < 0.995*(1-border)*height){
+	line(image,
+		currentPosition,
+		endPoint,
+		colour,
+		2,
+		CV_AA);
+	//}
+	currentPosition = endPoint;
 }
 
 

@@ -73,7 +73,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="CUDAfunctions.cpp" />
+    <ClCompile Include="CUDAFunctions.cu" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="plot.cpp" />
     <ClCompile Include="SLEAnimate.cpp" />
@@ -81,7 +81,7 @@
     <ClCompile Include="stochastic_processes.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CUDAfunctions.h" />
+    <ClInclude Include="CUDAFunctions.cuh" />
     <ClInclude Include="plot.h" />
     <ClInclude Include="SLEAnimate.h" />
     <ClInclude Include="sle_process.h" />
